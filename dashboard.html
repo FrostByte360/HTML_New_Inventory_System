@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory System Login</title>
+    <link rel="stylesheet" href="mystyle.css">
+    <script src="script.js"></script>
+</head>
+<body>
+
+    <div id="loginPage">
+        <div class="login-container">
+            <h1>User Login</h1>
+
+            <label for="username">Username:</label>
+            <input type="text" id="username">
+
+            <label for="password">Password:</label>
+            <input type="password" id="password">
+
+            <button onclick="login()">Login</button>
+        </div>
+    </div>
+
+    <div id="inventoryPage">
+
+        <div class="sidebar" id="sidebar">
+            <div class="logo">
+                <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+                Inventory
+            </div>
+
+            <div class="menu">
+
+                <div class="menu-item">
+                    <button class="menu-btn" onclick="showPage('dashboard')">
+                        📊 Dashboard
+                    </button>
+                </div>
+
+                <div class="menu-item">
+                    <button class="menu-btn" onclick="toggleMenu('productMenu')">
+                        📦 Products ▼
+                    </button>
+                    <div class="submenu" id="productMenu">
+                        <a href="#" onclick="showPage('productList')">Product List</a>
+                        <a href="#" onclick="showPage('categories')">Categories</a>
+                        <a href="#" onclick="showPage('addProduct')">Add Product</a>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <button class="menu-btn" onclick="toggleMenu('orderMenu')">
+                        🚚 Orders ▼
+                    </button>
+                    <div class="submenu" id="orderMenu">
+                        <a href="#" onclick="showPage('pendingOrders')">Pending Orders</a>
+                        <a href="#" onclick="showPage('inTransitOrders')">In Transit Orders</a>
+                        <a href="#" onclick="showPage('deliveredOrders')">Delivered Orders</a>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <button class="menu-btn" onclick="toggleMenu('stockMenu')">
+                        🏭 Stock ▼
+                    </button>
+                    <div class="submenu" id="stockMenu">
+                        <a href="#" onclick="showPage('currentStock')">Current Stock</a>
+                        <a href="#" onclick="showPage('lowStock')">Low Stock</a>
+                        <a href="#" onclick="showPage('stockHistory')">Stock History</a>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <button class="menu-btn" onclick="toggleMenu('transactionMenu')">
+                        💳 Transactions ▼
+                    </button>
+                    <div class="submenu" id="transactionMenu">
+                        <a href="#" onclick="showPage('stockIn')">Stock In</a>
+                        <a href="#" onclick="showPage('stockOut')">Stock Out</a>
+                        <a href="#" onclick="showPage('transactionRecords')">Transaction Records</a>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <button class="menu-btn" onclick="toggleMenu('trackingMenu')">
+                        📍 Tracking ▼
+                    </button>
+                    <div class="submenu" id="trackingMenu">
+                        <a href="#" onclick="showPage('deliveryTracking')">Delivery Tracking</a>
+                        <a href="#" onclick="showPage('deliveryHistory')">Delivery History</a>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <button class="menu-btn" onclick="toggleMenu('adminMenu')">
+                        👤 Admin ▼
+                    </button>
+                    <div class="submenu" id="adminMenu">
+                        <a href="#" onclick="showPage('profile')">Profile</a>
+                        <a href="#" onclick="showPage('changePassword')">Change Password</a>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <button class="menu-btn" onclick="logout()">
+                        🚪 Logout
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="card" id="pageContent">
+                </div>
+        </div>
+
+    </div>
+</body>
+</html>
