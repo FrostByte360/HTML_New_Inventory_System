@@ -1,4 +1,4 @@
-// Array containing your exact product data
+// BEGINNING OF SCRIPT.JS
 
 const initialMockData = [
     { id: "P001", name: "FreshWave Sardines", category: "Canned Goods", quantity: 250, price: 28.00 },
@@ -28,16 +28,21 @@ const initialMockData = [
     { id: "P025", name: "HealthyHarvest Oats", category: "Non-Perishable Items", quantity: 70, price: 145.00 }
 ];
 
+// Looks up existing inventory cache sa sulod sang browser; kung empty man lang, amo ni ang masalo nga initial mock list
+// LocalStorage is used here to persist the data across page reloads, simulating a simple database para sa inventory system.
 let productsDatabase = JSON.parse(localStorage.getItem("globalProducts")) || initialMockData;
+
+// Reusable function para isave ang current state sang aton products array didto sa persistent browser memory;
+// kuno abi gina "INSERT INTO" ta to sa browser memory ang array ni Elaiza 
 function saveToStorage() {
     localStorage.setItem("globalProducts", JSON.stringify(productsDatabase));
 }
 
+// isave dayon ang default mock data sa browser storage para ready to use na dayon siya kag indi magblank
 if (!localStorage.getItem("globalProducts")) {
     saveToStorage();
 }
 
-// Master database holding your exact order datasets
 const initialOrdersMockData = [
     // PENDING ORDERS (10 Records)
     { id: "ORD001", productName: "FreshWave Sardines", qty: 100, orderDate: "06/01/2026", deliveryDate: "06/08/2026", status: "Pending" },
@@ -103,15 +108,12 @@ const initialStockInMock = [
     { id: "SI006", date: "2026-06-05", prodId: "P012", prodName: "EasyFit Shorts", qty: 15, supplier: "UrbanWear Supplier" }
 ];
 
-// 2. Connect it to browser storage
 let stockInDatabase = JSON.parse(localStorage.getItem("globalStockIn")) || initialStockInMock;
 
-// 3. Persistence handler helper
 function saveStockInToStorage() {
     localStorage.setItem("globalStockIn", JSON.stringify(stockInDatabase));
 }
 
-// 4. Initial commit if storage is empty
 if (!localStorage.getItem("globalStockIn")) {
     saveStockInToStorage();
 }
@@ -133,14 +135,13 @@ const initialStockOutMock = [
     { id: "SO013", orderId: "ORD038", prodName: "HealthyHarvest Oats", qty: 35, delDate: "06/02/2026", reason: "Health Store Supply" }
 ];
 
-// 2. Wire them to look into localStorage with the fallback:
 let stockOutDatabase = JSON.parse(localStorage.getItem("globalStockOut")) || initialStockOutMock;
+
 function saveStockOutToStorage() {
     localStorage.setItem("globalStockOut", JSON.stringify(stockOutDatabase));
 }
+
 if (!localStorage.getItem("globalStockOut")) saveStockOutToStorage();
-
-
 
 // Master database holding exact Transaction Log entries
 const initialTransactionMock = [
@@ -165,15 +166,12 @@ const initialTransactionMock = [
     { id: "TR019", type: "Stock Out", ref: "ORD038", prodId: "P025", qty: "-35", effect: "Decrease" }
 ];
 
-// 2. Connect it to browser storage
 let transactionDatabase = JSON.parse(localStorage.getItem("globalTransactions")) || initialTransactionMock;
 
-// 3. Persistence utility helper
 function saveTransactionsToStorage() {
     localStorage.setItem("globalTransactions", JSON.stringify(transactionDatabase));
 }
 
-// 4. Initial commit if storage is empty
 if (!localStorage.getItem("globalTransactions")) {
     saveTransactionsToStorage();
 }
@@ -196,9 +194,11 @@ const initialHistoryMock = [
 ];
 
 let deliveryHistoryDatabase = JSON.parse(localStorage.getItem("globalDeliveryHistory")) || initialHistoryMock;
+
 function saveDeliveryHistoryToStorage() {
     localStorage.setItem("globalDeliveryHistory", JSON.stringify(deliveryHistoryDatabase));
 }
+
 if (!localStorage.getItem("globalDeliveryHistory")) {
     saveDeliveryHistoryToStorage();
 }
@@ -336,15 +336,13 @@ const initialTrackingLogsMock = {
     ]
 };
 
-// 2. Load from browser memory or default to the mock log collection
+
 let deliveryTrackingLogs = JSON.parse(localStorage.getItem("globalTrackingLogs")) || initialTrackingLogsMock;
 
-// 3. Simple persistence engine utility helper
 function saveTrackingLogsToStorage() {
     localStorage.setItem("globalTrackingLogs", JSON.stringify(deliveryTrackingLogs));
 }
 
-// 4. Initial commit write if local cache is fresh
 if (!localStorage.getItem("globalTrackingLogs")) {
     saveTrackingLogsToStorage();
 }
@@ -383,15 +381,12 @@ const initialStockHistoryMock = [
     { auditId: "AUD030", dateTime: "06/06/2026 02:15 PM", product: "ClearView Measuring Cup", action: "Stock Adjustment", qtyChange: "+10", prevStock: 20, newStock: 30, reference: "ADJ002" }
 ];
 
-// 2. Tie it to localStorage
 let stockHistoryDatabase = JSON.parse(localStorage.getItem("globalStockHistory")) || initialStockHistoryMock;
 
-// 3. Simple persistence utility helper
 function saveStockHistoryToStorage() {
     localStorage.setItem("globalStockHistory", JSON.stringify(stockHistoryDatabase));
 }
 
-// 4. Run an initial write if storage is fresh
 if (!localStorage.getItem("globalStockHistory")) {
     saveStockHistoryToStorage();
 }
@@ -400,7 +395,7 @@ if (!localStorage.getItem("globalStockHistory")) {
 //======================================================================================================================================
 //======================================================================================================================================
 
-// 1. Keep your group's exact admin data schema and credentials intact:
+//Ang default fallback credentials kag account details sang aton admin
 const defaultAdminProfile = {
     id: "ADM001",
     fullName: "Juan Dela Cruz",
@@ -410,28 +405,32 @@ const defaultAdminProfile = {
     role: "Warehouse Administrator",
     dateCreated: "01/01/2026",
     lastLogin: "06/06/2026 10:30 AM",
-    password: "admin123" // Secured fallback parameter for login system matching
+    password: "admin123"
+    // Parameters naton forda account information details
 };
 
-// 2. Safely wire into browser memory cache
+// Gina register ang information sa browser local storage, kung may ara na daan nga data values
 let adminProfile = JSON.parse(localStorage.getItem("globalAdminProfile")) || defaultAdminProfile;
 let isEditingProfile = false;
 
-// 3. Storage sync engine utility
+// Function para mag-save sang updates sa admin details diretso sa LocalStorage sang browser
+// Same-same man parehas sa pseudo-database kagina, gin-JSON stringify naton para ma-store as string, kag parse naman pagkuha
 function saveProfileToStorage() {
     localStorage.setItem("globalAdminProfile", JSON.stringify(adminProfile));
 }
 
-// 4. Run an initial save block if local cache is currently empty
 if (!localStorage.getItem("globalAdminProfile")) {
     saveProfileToStorage();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Find the main iframe inside dashboard.html (make sure its id matches 'main-display')
+    // Pangitaon niya ang main iframe sa sulod sang dashboard.html and set its default source to overview.html
+    // An <iframe> (Inline Frame) embeds another HTML page inside the current document, creating a nested browsing context.
+    // It’s widely used for embedding videos, maps, widgets, or even entire web pages.
     const mainIframe = document.getElementById("main-display"); 
     if (mainIframe) {
-        mainIframe.src = "overview.html"; // Instantly load the dynamic overview cards on launch!
+        mainIframe.src = "overview.html";
+        // Iload and dashboard
     }
 });
 
@@ -481,20 +480,17 @@ function deleteProduct(productId, returnPage) {
     if (confirmRemoval) {
         productsDatabase = productsDatabase.filter(p => p.id !== productId);
         
-        // 🌟 ADDED: Save the newly filtered array to localStorage!
+        // Gina save ang changes sa localStorage para mag-reflect sa iban nga pages nga nagagamit sang productsDatabase
         saveToStorage(); 
         
-        // REPLACED: Call our new iframe rendering engines instead of showPage
         if (returnPage === 'productList') {
             renderProductList();
         } else if (returnPage === 'categories') {
             renderCategories();
         } else if (returnPage === 'currentStock') {
-            // 🌟 ADDED: If they delete from the Current Stock/Stock In view, handle it here!
             if (typeof renderCurrentStock === "function") {
                 renderCurrentStock();
             } else {
-                // If you chose Option 1 (reusing the product-list file), fallback directly to product list render
                 renderProductList(); 
             }
         } else {
@@ -508,15 +504,12 @@ function dispatchOrder(orderId) {
     const matchedorder = ordersDatabase.find(o => o.id === orderId);
     if (!matchedorder) return;
 
-    // ... whatever verification steps or status updates they had, keep them!
-    matchedorder.status = "In Transit"; // For example, updating the state
+    matchedorder.status = "In Transit";
 
-    // 🌟 SAVE THE PROGRESS: Commit the state modification to localStorage!
     saveOrdersToStorage();
 
     alert(`Order ${orderId} has been successfully dispatched for transport.`);
 
-    // Refresh our new iframe view instantly
     renderPendingOrders();
 }
 
@@ -551,7 +544,6 @@ function completeOrderDelivery(orderId) {
             remarks: "Completed"
         });
 
-        // 🌟 SAVE ALL THE CHAINS: Commit all updated arrays to browser memory!
         saveOrdersToStorage();         // Saves the "Delivered" status change
         saveStockOutToStorage();        // Saves the new Stock Out log entry
         saveDeliveryHistoryToStorage();  // Saves the new Delivery History record
@@ -603,17 +595,13 @@ function handleAddProductSubmit(event) {
         price: parsedPrice
     };
 
-    // ... all their validation logic remains exactly the same ...
-
     productsDatabase.push(productPayload);
     saveToStorage();
     alert(`Success: "${nameInput}" was successfully registered into inventory database.`);
     
-    // REPLACED: Redirect the iframe to load the standalone product list page
     window.location.href = "product-list.html";
 }
 
-// PROFILE AND PASSWORD PROCESSING MODULE LOGIC
 function setProfileEditMode(mode) {
     isEditingProfile = mode;
     showPage('profile');
@@ -676,15 +664,13 @@ function clearPasswordForm() {
 //======================================================================================================================================
 //======================================================================================================================================
 
-// Extract this out so the iframe can call it directly!
 function renderProductList() {
-    // 1. Try to find the table body inside the iframe page
+    // Iretreive ang table body container target sa sulod sang product-list.html
     const tableBody = document.getElementById("productTableBody");
-    if (!tableBody) return; // Exit if we aren't on the productList page
+    if (!tableBody) return; // Exit if wala ta sa productList page
 
     let tableRows = "";
     
-    // The exact same loop they wrote!
     productsDatabase.forEach(p => {
         tableRows += `
         <tr>
@@ -706,9 +692,9 @@ function renderProductList() {
 }
 
 function renderCategories() {
-    // 1. Try to find the target container inside your new categories.html page
+
     const container = document.getElementById("categoriesContainer");
-    if (!container) return; // Safeguard if we aren't currently viewing categories
+    if (!container) return; 
 
     const categoriesList = ["Canned Goods", "Clothing", "Kitchen Goods", "Non-Perishable Items"];
     let categoriesHTML = `<h2>Product Categories</h2><p style="margin-bottom: 25px;">Browse inventory products grouped by operational category segments.</p>`;
@@ -757,7 +743,6 @@ function renderCategories() {
         </div>`;
     });
 
-    // 2. Inject everything directly into the categories file container
     container.innerHTML = categoriesHTML;
 }
 
@@ -784,11 +769,10 @@ function renderLowStock() {
 
 function renderPendingOrders() {
     const tableBody = document.getElementById("pendingOrdersTableBody");
-    if (!tableBody) return; // Guard clause if we aren't viewing this specific page
+    if (!tableBody) return;
 
     let pendingRows = "";
     
-    // Filter down to show only 'Pending' item elements
     ordersDatabase.filter(o => o.status === "Pending").forEach(o => {
         pendingRows += `
         <tr>
@@ -811,11 +795,10 @@ function renderPendingOrders() {
 
 function renderInTransitOrders() {
     const tableBody = document.getElementById("inTransitTableBody");
-    if (!tableBody) return; // Safeguard if we aren't viewing this specific page
+    if (!tableBody) return;
 
     let transitRows = "";
     
-    // Filter down to display only 'In Transit' items
     ordersDatabase.filter(o => o.status === "In Transit").forEach(o => {
         transitRows += `
         <tr>
@@ -838,11 +821,10 @@ function renderInTransitOrders() {
 
 function renderDeliveredOrders() {
     const tableBody = document.getElementById("deliveredTableBody");
-    if (!tableBody) return; // Safeguard if we aren't viewing this specific page
+    if (!tableBody) return;
 
     let deliveredRows = "";
     
-    // Filter down to display only 'Delivered' items
     ordersDatabase.filter(o => o.status === "Delivered").forEach(o => {
         deliveredRows += `
         <tr>
@@ -884,7 +866,7 @@ function renderCurrentStock() {
 
 function renderStockHistory() {
     const tableBody = document.getElementById("stockHistoryTableBody");
-    if (!tableBody) return; // Safeguard block if user is on a different submenu sheet
+    if (!tableBody) return;
 
     let shRows = "";
     
@@ -919,7 +901,7 @@ function renderStockHistory() {
 
 function renderStockInRecords() {
     const tableBody = document.getElementById("stockInTableBody");
-    if (!tableBody) return; // Safeguard guard clause if viewing a different page frame
+    if (!tableBody) return;
 
     let stockInRows = "";
     
@@ -940,7 +922,7 @@ function renderStockInRecords() {
 
 function renderStockOutRecords() {
     const tableBody = document.getElementById("stockOutTableBody");
-    if (!tableBody) return; // Safeguard guard clause if viewing a different iframe view
+    if (!tableBody) return;
 
     let stockOutRows = "";
     
@@ -961,7 +943,7 @@ function renderStockOutRecords() {
 
 function renderTransactionRecords() {
     const tableBody = document.getElementById("transactionRecordsTableBody");
-    if (!tableBody) return; // Safeguard guard clause if viewing a different iframe view
+    if (!tableBody) return;
 
     let txRows = "";
     
@@ -984,7 +966,7 @@ function renderTransactionRecords() {
 
 function renderDeliveryTracking() {
     const container = document.getElementById("deliveryTrackingContainer");
-    if (!container) return; // Safeguard guard clause block if viewing a different page frame
+    if (!container) return;
 
     let trackingSectionsHTML = `
     <h2>Live Delivery Tracking Hub</h2>
@@ -1044,7 +1026,7 @@ function renderDeliveryTracking() {
 
 function renderDeliveryHistory() {
     const tableBody = document.getElementById("deliveryHistoryTableBody");
-    if (!tableBody) return; // Safeguard guard clause if viewing a different iframe view
+    if (!tableBody) return;
 
     let dhRows = "";
     
@@ -1065,10 +1047,9 @@ function renderDeliveryHistory() {
     tableBody.innerHTML = dhRows.length > 0 ? dhRows : '<tr><td colspan="8" style="text-align:center; color:#999; padding:20px;">No historical distribution milestones logged inside archive registries.</td></tr>';
 }
 
-// 1. Main Data Rendering Engine Block
 function renderProfile() {
     const container = document.getElementById("profileViewContainer");
-    if (!container) return; // Safeguard clause block if viewing a different page frame
+    if (!container) return;
 
     if (isEditingProfile) {
         container.innerHTML = `
@@ -1124,13 +1105,12 @@ function renderProfile() {
     }
 }
 
-// 2. Action Callback to Toggle Edit State Mode
 function setProfileEditMode(booleanValue) {
     isEditingProfile = booleanValue;
-    renderProfile(); // Instantly update view container interior structure
+    renderProfile();
 }
 
-// 3. Action Callback to Save Profile Modification Changes
+// Action Callback to Save Profile Modification Changes
 function saveProfileChanges() {
     const nameInput = document.getElementById("editProfileName");
     const usernameInput = document.getElementById("editProfileUsername");
@@ -1161,7 +1141,7 @@ function saveProfileChanges() {
     }
 }
 
-// 1. Validate Form Input Data and Update Admin Password
+// Validate Form Input Data and Update Admin Password
 function updateSystemPassword(event) {
     event.preventDefault(); // Keep page from breaking iframe context on submit
 
@@ -1203,7 +1183,7 @@ function updateSystemPassword(event) {
     clearPasswordForm();
 }
 
-// 2. Clear Form Submission Fields Helper Block
+// Clear Form Submission Fields Helper Block
 function clearPasswordForm() {
     const form = document.getElementById("passwordForm");
     if (form) {
@@ -1259,37 +1239,37 @@ function renderDashboardOverview() {
 //======================================================================================================================================
 //======================================================================================================================================
 
-function showPage(page) {
-    let content = document.getElementById("pageContent");
+// function showPage(page) {
+//     let content = document.getElementById("pageContent");
 
-    const totalProducts = productsDatabase.length;
-    const lowStockCount = productsDatabase.filter(p => p.quantity < 50).length;
-    const aggregateOrdersCount = ordersDatabase.length;
-    const pendingDeliveriesCount = ordersDatabase.filter(o => o.status === "Pending" || o.status === "In Transit").length;
+//     const totalProducts = productsDatabase.length;
+//     const lowStockCount = productsDatabase.filter(p => p.quantity < 50).length;
+//     const aggregateOrdersCount = ordersDatabase.length;
+//     const pendingDeliveriesCount = ordersDatabase.filter(o => o.status === "Pending" || o.status === "In Transit").length;
 
-    switch(page) {
-        case "dashboard":
-            content.innerHTML = `
-            <h2>Dashboard</h2>
-            <p style="margin-bottom: 20px;">Welcome to your Inventory Overview.</p>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                <div style="background: #2563eb; color: white; padding: 20px; border-radius: 8px;">
-                    <h3>Total Products</h3>
-                    <p style="font-size: 24px; font-weight: bold; margin-top: 10px;">${totalProducts}</p>
-                </div>
-                <div style="background: #10b981; color: white; padding: 20px; border-radius: 8px;">
-                    <h3>Total Orders</h3>
-                    <p style="font-size: 24px; font-weight: bold; margin-top: 10px;">${aggregateOrdersCount}</p>
-                </div>
-                <div style="background: #ef4444; color: white; padding: 20px; border-radius: 8px;">
-                    <h3>Low Stock Items</h3>
-                    <p style="font-size: 24px; font-weight: bold; margin-top: 10px;">${lowStockCount}</p>
-                </div>
-                <div style="background: #f59e0b; color: white; padding: 20px; border-radius: 8px;">
-                    <h3>Pending Deliveries</h3>
-                    <p style="font-size: 24px; font-weight: bold; margin-top: 10px;">${pendingDeliveriesCount}</p>
-                </div>
-            </div>`;
-            break;
-    }
-}
+//     switch(page) {
+//         case "dashboard":
+//             content.innerHTML = `
+//             <h2>Dashboard</h2>
+//             <p style="margin-bottom: 20px;">Welcome to your Inventory Overview.</p>
+//             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+//                 <div style="background: #2563eb; color: white; padding: 20px; border-radius: 8px;">
+//                     <h3>Total Products</h3>
+//                     <p style="font-size: 24px; font-weight: bold; margin-top: 10px;">${totalProducts}</p>
+//                 </div>
+//                 <div style="background: #10b981; color: white; padding: 20px; border-radius: 8px;">
+//                     <h3>Total Orders</h3>
+//                     <p style="font-size: 24px; font-weight: bold; margin-top: 10px;">${aggregateOrdersCount}</p>
+//                 </div>
+//                 <div style="background: #ef4444; color: white; padding: 20px; border-radius: 8px;">
+//                     <h3>Low Stock Items</h3>
+//                     <p style="font-size: 24px; font-weight: bold; margin-top: 10px;">${lowStockCount}</p>
+//                 </div>
+//                 <div style="background: #f59e0b; color: white; padding: 20px; border-radius: 8px;">
+//                     <h3>Pending Deliveries</h3>
+//                     <p style="font-size: 24px; font-weight: bold; margin-top: 10px;">${pendingDeliveriesCount}</p>
+//                 </div>
+//             </div>`;
+//             break;
+//     }
+// }
