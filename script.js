@@ -1215,7 +1215,8 @@ function renderDashboardOverview() {
     container.innerHTML = `
     <h2>Dashboard</h2>
     <p style="margin-bottom: 20px;">Welcome to your Inventory Overview.</p>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px;">
         <div style="background: #2563eb; color: white; padding: 20px; border-radius: 8px;">
             <h3>Total Products</h3>
             <p style="font-size: 24px; font-weight: bold; margin-top: 10px;">${totalProducts}</p>
@@ -1231,6 +1232,13 @@ function renderDashboardOverview() {
         <div style="background: #f59e0b; color: white; padding: 20px; border-radius: 8px;">
             <h3>Pending Deliveries</h3>
             <p style="font-size: 24px; font-weight: bold; margin-top: 10px;">${pendingDeliveriesCount}</p>
+        </div>
+    </div>
+
+    <div style="margin-top: 25px;">
+        <h3 style="margin-bottom: 12px; color: #374151;">Performance Analytics & Inventory Breakdown Visualization</h3>
+        <div style="width: 100%; overflow: hidden; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            <img src="img/imgdashboard.PNG" alt="Inventory Performance Dashboard Visualization" style="width: 100%; height: auto; display: block;">
         </div>
     </div>`;
 }
