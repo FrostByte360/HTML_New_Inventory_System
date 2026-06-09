@@ -490,11 +490,20 @@ function handleAddProductSubmit(event) {
         price: parsedPrice
     };
 
+    // ... all their validation logic remains exactly the same ...
+
     productsDatabase.push(productPayload);
     alert(`Success: "${nameInput}" was successfully registered into inventory database.`);
     
-    showPage('productList');
+    // REPLACED: Redirect the iframe to load the standalone product list page
+    window.location.href = "product-list.html";
 }
+
+    // productsDatabase.push(productPayload);
+    // alert(`Success: "${nameInput}" was successfully registered into inventory database.`);
+    
+    // showPage('productList');
+    //}
 
 // PROFILE AND PASSWORD PROCESSING MODULE LOGIC
 function setProfileEditMode(mode) {
@@ -642,6 +651,27 @@ function renderCategories() {
 
     // 2. Inject everything directly into the categories file container
     container.innerHTML = categoriesHTML;
+}
+
+function renderLowStock() {
+    const tableBody = document.getElementById("lowStockTableBody");
+    if (!tableBody) return;
+
+    let lowStockRows = "";
+    
+    // Filter down to the low stock entries automatically
+    productsDatabase.filter(p => p.quantity < 50).forEach(p => {
+        lowStockRows += `
+        <tr>
+            <td>${p.id}</td>
+            <td>${p.name}</td>
+            <td>${p.category}</td>
+            <td style="font-weight: bold; color: #ef4444;">${p.quantity}</td>
+            <td>₱${p.price.toFixed(2)}</td>
+        </tr>`;
+    });
+
+    tableBody.innerHTML = lowStockRows.length > 0 ? lowStockRows : '<tr><td colspan="5" style="text-align:center; color:#10b981; padding: 20px; font-weight: bold;">Excellent: No products are currently running low on stock boundaries.</td></tr>';
 }
 
 //======================================================================================================================================

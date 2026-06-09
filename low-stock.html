@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Low Stock Alerts</title>
+    <link rel="stylesheet" href="mystyle.css">
+</head>
+<body style="padding: 20px; background: transparent;">
+
+    <h2>Low Stock Items Alert</h2>
+    <p style="color: #ef4444; font-weight: bold; margin-bottom: 15px;">Warning: The items listed below are critically below threshold reserves (Quantity < 50) and require re-orders.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Product ID</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+            </tr>
+        </thead>
+        <tbody id="lowStockTableBody">
+            </tbody>
+    </table>
+
+    <script src="script.js"></script>
+    <script>
+        if (typeof renderLowStock === "function") {
+            renderLowStock();
+        }
+    </script>
+</body>
+</html>
