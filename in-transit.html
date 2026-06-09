@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>In Transit Distribution Pipelines</title>
+    <link rel="stylesheet" href="mystyle.css">
+</head>
+<body style="padding: 20px; background: transparent;">
+
+    <h2>In Transit Distribution Pipelines</h2>
+    <p style="margin-bottom: 15px;">Dispatched cargo load items currently mapped to courier tracking routes.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Product Name</th>
+                <th>Qty Ordered</th>
+                <th>Order Date</th>
+                <th>Expected Delivery</th>
+                <th>Status</th>
+                <th style="text-align: center; width: 130px;">Action</th>
+            </tr>
+        </thead>
+        <tbody id="inTransitTableBody">
+            </tbody>
+    </table>
+
+    <script src="script.js"></script>
+    <script>
+        // Trigger the rendering instantly when iframe loads the page
+        if (typeof renderInTransitOrders === "function") {
+            renderInTransitOrders();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pending Orders Queue</title>
+    <link rel="stylesheet" href="mystyle.css">
+</head>
+<body style="padding: 20px; background: transparent;">
+
+    <h2>Pending Orders Queue</h2>
+    <p style="margin-bottom: 15px;">Active processing queues awaiting fulfillment confirmation and line packaging.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Product Name</th>
+                <th>Qty Ordered</th>
+                <th>Order Date</th>
+                <th>Expected Delivery</th>
+                <th>Status</th>
+                <th style="text-align: center; width: 110px;">Action</th>
+            </tr>
+        </thead>
+        <tbody id="pendingOrdersTableBody">
+            </tbody>
+    </table>
+
+    <script src="script.js"></script>
+    <script>
+        // Trigger the rendering instantly when iframe displays page
+        if (typeof renderPendingOrders === "function") {
+            renderPendingOrders();
+        }
+    </script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 // Array containing your exact product data
-let productsDatabase = [
+
+const initialMockData = [
     { id: "P001", name: "FreshWave Sardines", category: "Canned Goods", quantity: 250, price: 28.00 },
     { id: "P002", name: "Golden Harvest Beef", category: "Canned Goods", quantity: 180, price: 42.00 },
     { id: "P003", name: "Ocean Star Tuna", category: "Canned Goods", quantity: 220, price: 38.00 },
@@ -27,8 +28,45 @@ let productsDatabase = [
     { id: "P025", name: "HealthyHarvest Oats", category: "Non-Perishable Items", quantity: 70, price: 145.00 }
 ];
 
+let productsDatabase = JSON.parse(localStorage.getItem("globalProducts")) || initialMockData;
+function saveToStorage() {
+    localStorage.setItem("globalProducts", JSON.stringify(productsDatabase));
+}
+
+if (!localStorage.getItem("globalProducts")) {
+    saveToStorage();
+}
+
+// let productsDatabase = [
+//     { id: "P001", name: "FreshWave Sardines", category: "Canned Goods", quantity: 250, price: 28.00 },
+//     { id: "P002", name: "Golden Harvest Beef", category: "Canned Goods", quantity: 180, price: 42.00 },
+//     { id: "P003", name: "Ocean Star Tuna", category: "Canned Goods", quantity: 220, price: 38.00 },
+//     { id: "P004", name: "Sunny Fruit Mix", category: "Canned Goods", quantity: 90, price: 65.00 },
+//     { id: "P005", name: "Farm Choice Beans", category: "Canned Goods", quantity: 140, price: 32.00 },
+//     { id: "P006", name: "Silver Coast Sardines", category: "Canned Goods", quantity: 170, price: 27.00 },
+//     { id: "P007", name: "UrbanFit T-Shirt", category: "Clothing", quantity: 75, price: 199.00 },
+//     { id: "P008", name: "BlueTrail Jeans", category: "Clothing", quantity: 40, price: 699.00 },
+//     { id: "P009", name: "NorthPeak Hoodie", category: "Clothing", quantity: 25, price: 899.00 },
+//     { id: "P010", name: "ComfortWear Polo", category: "Clothing", quantity: 50, price: 350.00 },
+//     { id: "P011", name: "FlexStyle Leggings", category: "Clothing", quantity: 60, price: 299.00 },
+//     { id: "P012", name: "EasyFit Shorts", category: "Clothing", quantity: 45, price: 250.00 },
+//     { id: "P013", name: "SilverEdge Spoon Set", category: "Kitchen Goods", quantity: 60, price: 150.00 },
+//     { id: "P014", name: "Crystal Plate Set", category: "Kitchen Goods", quantity: 35, price: 120.00 },
+//     { id: "P015", name: "ChefMaster Cooking Pot", category: "Kitchen Goods", quantity: 18, price: 750.00 },
+//     { id: "P016", name: "FreshLock Container Set", category: "Kitchen Goods", quantity: 55, price: 220.00 },
+//     { id: "P017", name: "ClearView Measuring Cup", category: "Kitchen Goods", quantity: 30, price: 180.00 },
+//     { id: "P018", name: "HeatGuard Frying Pan", category: "Kitchen Goods", quantity: 22, price: 650.00 },
+//     { id: "P019", name: "PureGrain Rice Pack", category: "Non-Perishable Items", quantity: 120, price: 285.00 },
+//     { id: "P020", name: "SweetBlend Sugar Pack", category: "Non-Perishable Items", quantity: 100, price: 95.00 },
+//     { id: "P021", name: "Baker's Choice Flour", category: "Non-Perishable Items", quantity: 80, price: 58.00 },
+//     { id: "P022", name: "QuickMeal Noodle Pack", category: "Non-Perishable Items", quantity: 150, price: 89.00 },
+//     { id: "P023", name: "NutriPlus Milk Powder", category: "Non-Perishable Items", quantity: 65, price: 420.00 },
+//     { id: "P024", name: "MorningBrew Coffee Mix", category: "Non-Perishable Items", quantity: 110, price: 85.00 },
+//     { id: "P025", name: "HealthyHarvest Oats", category: "Non-Perishable Items", quantity: 70, price: 145.00 }
+// ];
+
 // Master database holding your exact order datasets
-let ordersDatabase = [
+const initialOrdersMockData = [
     // PENDING ORDERS (10 Records)
     { id: "ORD001", productName: "FreshWave Sardines", qty: 100, orderDate: "06/01/2026", deliveryDate: "06/08/2026", status: "Pending" },
     { id: "ORD002", productName: "Golden Harvest Beef", qty: 80, orderDate: "06/02/2026", deliveryDate: "06/09/2026", status: "Pending" },
@@ -74,6 +112,15 @@ let ordersDatabase = [
     { id: "ORD038", productName: "HealthyHarvest Oats", qty: 35, orderDate: "05/26/2026", deliveryDate: "06/02/2026", status: "Delivered" }
 ];
 
+let ordersDatabase = JSON.parse(localStorage.getItem("globalOrders")) || initialOrdersMockData;
+function saveOrdersToStorage() {
+    localStorage.setItem("globalOrders", JSON.stringify(ordersDatabase));
+}
+
+if (!localStorage.getItem("globalOrders")) {
+    saveOrdersToStorage();
+}
+
 // Master database holding exact Stock In Records
 let stockInDatabase = [
     { id: "SI001", date: "2026-06-01", prodId: "P001", prodName: "FreshWave Sardines", qty: 50, supplier: "Cebu Trading Co." },
@@ -85,7 +132,7 @@ let stockInDatabase = [
 ];
 
 // Master database holding exact Stock Out Records (Delivered Only)
-let stockOutDatabase = [
+const initialStockOutMock = [
     { id: "SO001", orderId: "ORD026", prodName: "FreshWave Sardines", qty: 100, delDate: "05/27/2026", reason: "Customer Order Fulfilled" },
     { id: "SO002", orderId: "ORD027", prodName: "Golden Harvest Beef", qty: 75, delDate: "05/27/2026", reason: "Wholesale Delivery" },
     { id: "SO003", orderId: "ORD028", prodName: "Ocean Star Tuna", qty: 90, delDate: "05/28/2026", reason: "Customer Order Fulfilled" },
@@ -100,6 +147,15 @@ let stockOutDatabase = [
     { id: "SO012", orderId: "ORD037", prodName: "SweetBlend Sugar Pack", qty: 50, delDate: "06/01/2026", reason: "Grocery Store Delivery" },
     { id: "SO013", orderId: "ORD038", prodName: "HealthyHarvest Oats", qty: 35, delDate: "06/02/2026", reason: "Health Store Supply" }
 ];
+
+// 2. Wire them to look into localStorage with the fallback:
+let stockOutDatabase = JSON.parse(localStorage.getItem("globalStockOut")) || initialStockOutMock;
+function saveStockOutToStorage() {
+    localStorage.setItem("globalStockOut", JSON.stringify(stockOutDatabase));
+}
+if (!localStorage.getItem("globalStockOut")) saveStockOutToStorage();
+
+
 
 // Master database holding exact Transaction Log entries
 let transactionDatabase = [
@@ -125,7 +181,7 @@ let transactionDatabase = [
 ];
 
 // Master database holding exact Delivery History Logs
-let deliveryHistoryDatabase = [
+const initialHistoryMock = [
     { id: "DH001", orderId: "ORD026", prodName: "FreshWave Sardines", qty: 100, orderDate: "05/20/2026", delDate: "05/27/2026", status: "Delivered", remarks: "Completed" },
     { id: "DH002", orderId: "ORD027", prodName: "Golden Harvest Beef", qty: 75, orderDate: "05/20/2026", delDate: "05/27/2026", status: "Delivered", remarks: "Completed" },
     { id: "DH003", orderId: "ORD028", prodName: "Ocean Star Tuna", qty: 90, orderDate: "05/21/2026", delDate: "05/28/2026", status: "Delivered", remarks: "Completed" },
@@ -140,6 +196,12 @@ let deliveryHistoryDatabase = [
     { id: "DH012", orderId: "ORD037", prodName: "SweetBlend Sugar Pack", qty: 50, orderDate: "05/25/2026", delDate: "06/01/2026", status: "Delivered", remarks: "Completed" },
     { id: "DH013", orderId: "ORD038", prodName: "Healthy Harvest Oats", qty: 35, orderDate: "05/26/2026", delDate: "06/02/2026", status: "Delivered", remarks: "Completed" }
 ];
+
+let deliveryHistoryDatabase = JSON.parse(localStorage.getItem("globalDeliveryHistory")) || initialHistoryMock;
+function saveDeliveryHistoryToStorage() {
+    localStorage.setItem("globalDeliveryHistory", JSON.stringify(deliveryHistoryDatabase));
+}
+if (!localStorage.getItem("globalDeliveryHistory")) saveDeliveryHistoryToStorage();
 
 // Master tracking check ledger database containing live tracking logs
 let deliveryTrackingLogs = {
@@ -379,6 +441,9 @@ function deleteProduct(productId, returnPage) {
     if (confirmRemoval) {
         productsDatabase = productsDatabase.filter(p => p.id !== productId);
         
+        // 🌟 ADD THIS HERE: Save the newly filtered array to localStorage!
+        saveToStorage(); 
+        
         // REPLACED: Call our new iframe rendering engines instead of showPage
         if (returnPage === 'productList') {
             renderProductList();
@@ -406,13 +471,29 @@ function deleteProduct(productId, returnPage) {
 // }
 
 function dispatchOrder(orderId) {
-    const matchedOrder = ordersDatabase.find(o => o.id === orderId);
-    if (matchedOrder) {
-        matchedOrder.status = "In Transit";
-        alert(`Fulfillment Dispatch: Order "${orderId}" has transitioned to In Transit distribution lines.`);
-        showPage('pendingOrders');
-    }
+    const matchedorder = ordersDatabase.find(o => o.id === orderId);
+    if (!matchedorder) return;
+
+    // ... whatever verification steps or status updates they had, keep them!
+    matchedorder.status = "In Transit"; // For example, updating the state
+
+    // 🌟 SAVE THE PROGRESS: Commit the state modification to localStorage!
+    saveOrdersToStorage();
+
+    alert(`Order ${orderId} has been successfully dispatched for transport.`);
+
+    // Refresh our new iframe view instantly
+    renderPendingOrders();
 }
+
+// function dispatchOrder(orderId) {
+//     const matchedOrder = ordersDatabase.find(o => o.id === orderId);
+//     if (matchedOrder) {
+//         matchedOrder.status = "In Transit";
+//         alert(`Fulfillment Dispatch: Order "${orderId}" has transitioned to In Transit distribution lines.`);
+//         showPage('pendingOrders');
+//     }
+// }
 
 function completeOrderDelivery(orderId) {
     const matchedOrder = ordersDatabase.find(o => o.id === orderId);
@@ -445,10 +526,53 @@ function completeOrderDelivery(orderId) {
             remarks: "Completed"
         });
 
+        // 🌟 SAVE ALL THE CHAINS: Commit all updated arrays to browser memory!
+        saveOrdersToStorage();         // Saves the "Delivered" status change
+        saveStockOutToStorage();        // Saves the new Stock Out log entry
+        saveDeliveryHistoryToStorage();  // Saves the new Delivery History record
+
         alert(`Fulfillment Complete: Order "${orderId}" successfully logged as Delivered.`);
-        showPage('inTransitOrders');
+        
+        // REPLACED: Instantly re-render the in-transit view inside the iframe
+        renderInTransitOrders();
     }
 }
+
+// function completeOrderDelivery(orderId) {
+//     const matchedOrder = ordersDatabase.find(o => o.id === orderId);
+//     if (matchedOrder) {
+//         matchedOrder.status = "Delivered";
+        
+//         const today = new Date();
+//         const formattedDate = String(today.getMonth() + 1).padStart(2, '0') + '/' + 
+//                               String(today.getDate()).padStart(2, '0') + '/' + 
+//                               today.getFullYear();
+//         matchedOrder.deliveryDate = formattedDate;
+
+//         stockOutDatabase.push({
+//             id: `SO${String(stockOutDatabase.length + 1).padStart(3, '0')}`,
+//             orderId: matchedOrder.id,
+//             prodName: matchedOrder.productName,
+//             qty: matchedOrder.qty,
+//             delDate: formattedDate,
+//             reason: "Real-time Dashboard Delivery Fulfill"
+//         });
+
+//         deliveryHistoryDatabase.push({
+//             id: `DH${String(deliveryHistoryDatabase.length + 1).padStart(3, '0')}`,
+//             orderId: matchedOrder.id,
+//             prodName: matchedOrder.productName,
+//             qty: matchedOrder.qty,
+//             orderDate: matchedOrder.orderDate,
+//             delDate: formattedDate,
+//             status: "Delivered",
+//             remarks: "Completed"
+//         });
+
+//         alert(`Fulfillment Complete: Order "${orderId}" successfully logged as Delivered.`);
+//         showPage('inTransitOrders');
+//     }
+// }
 
 function handleAddProductSubmit(event) {
     event.preventDefault();
@@ -493,6 +617,7 @@ function handleAddProductSubmit(event) {
     // ... all their validation logic remains exactly the same ...
 
     productsDatabase.push(productPayload);
+    saveToStorage();
     alert(`Success: "${nameInput}" was successfully registered into inventory database.`);
     
     // REPLACED: Redirect the iframe to load the standalone product list page
@@ -674,6 +799,82 @@ function renderLowStock() {
     tableBody.innerHTML = lowStockRows.length > 0 ? lowStockRows : '<tr><td colspan="5" style="text-align:center; color:#10b981; padding: 20px; font-weight: bold;">Excellent: No products are currently running low on stock boundaries.</td></tr>';
 }
 
+function renderPendingOrders() {
+    const tableBody = document.getElementById("pendingOrdersTableBody");
+    if (!tableBody) return; // Guard clause if we aren't viewing this specific page
+
+    let pendingRows = "";
+    
+    // Filter down to show only 'Pending' item elements
+    ordersDatabase.filter(o => o.status === "Pending").forEach(o => {
+        pendingRows += `
+        <tr>
+            <td>${o.id}</td>
+            <td>${o.productName}</td>
+            <td>${o.qty}</td>
+            <td>${o.orderDate}</td>
+            <td>${o.deliveryDate}</td>
+            <td><span style="background: #fef3c7; color: #d97706; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 12px;">${o.status}</span></td>
+            <td style="text-align: center;">
+                <button onclick="dispatchOrder('${o.id}')" style="background: #10b981; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 11px;">
+                    🚚 Ship Order
+                </button>
+            </td>
+        </tr>`;
+    });
+
+    tableBody.innerHTML = pendingRows.length > 0 ? pendingRows : '<tr><td colspan="7" style="text-align:center; color:#999; padding: 20px;">No pending processing sequences inside queues.</td></tr>';
+}
+
+function renderInTransitOrders() {
+    const tableBody = document.getElementById("inTransitTableBody");
+    if (!tableBody) return; // Safeguard if we aren't viewing this specific page
+
+    let transitRows = "";
+    
+    // Filter down to display only 'In Transit' items
+    ordersDatabase.filter(o => o.status === "In Transit").forEach(o => {
+        transitRows += `
+        <tr>
+            <td>${o.id}</td>
+            <td>${o.productName}</td>
+            <td>${o.qty}</td>
+            <td>${o.orderDate}</td>
+            <td>${o.deliveryDate}</td>
+            <td><span style="background: #e0f2fe; color: #0369a1; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 12px;">${o.status}</span></td>
+            <td style="text-align: center;">
+                <button onclick="completeOrderDelivery('${o.id}')" style="background: #2563eb; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 11px;">
+                    ✅ Mark Delivered
+                </button>
+            </td>
+        </tr>`;
+    });
+
+    tableBody.innerHTML = transitRows.length > 0 ? transitRows : '<tr><td colspan="7" style="text-align:center; color:#999; padding: 20px;">No freight shipments currently moving through en route channels.</td></tr>';
+}
+
+function renderDeliveredOrders() {
+    const tableBody = document.getElementById("deliveredTableBody");
+    if (!tableBody) return; // Safeguard if we aren't viewing this specific page
+
+    let deliveredRows = "";
+    
+    // Filter down to display only 'Delivered' items
+    ordersDatabase.filter(o => o.status === "Delivered").forEach(o => {
+        deliveredRows += `
+        <tr>
+            <td>${o.id}</td>
+            <td>${o.productName}</td>
+            <td>${o.qty}</td>
+            <td>${o.orderDate}</td>
+            <td>${o.deliveryDate}</td>
+            <td><span style="background: #dcfce7; color: #15803d; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 12px;">${o.status}</span></td>
+        </tr>`;
+    });
+
+    tableBody.innerHTML = deliveredRows.length > 0 ? deliveredRows : '<tr><td colspan="6" style="text-align:center; color:#999; padding: 20px;">No archived historical drop sheets logged yet.</td></tr>';
+}
+
 //======================================================================================================================================
 //======================================================================================================================================
 //======================================================================================================================================
@@ -801,194 +1002,194 @@ function showPage(page) {
         //     content.innerHTML = categoriesHTML;
         //     break;
 
-        case "addProduct":
-            content.innerHTML = `
-            <h2>Add New Product Entry</h2>
-            <p style="margin-bottom: 20px;">Populate details below to append a new production asset onto records master registry index matrix.</p>
+        // case "addProduct":
+        //     content.innerHTML = `
+        //     <h2>Add New Product Entry</h2>
+        //     <p style="margin-bottom: 20px;">Populate details below to append a new production asset onto records master registry index matrix.</p>
             
-            <form id="addProductForm" onsubmit="handleAddProductSubmit(event)" style="max-width: 500px; background: #f9fafb; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
-                <div style="margin-bottom: 15px;">
-                    <label style="display:block; font-weight:bold; margin-bottom:5px; color:#374151;">Product ID:</label>
-                    <input type="text" id="formProdId" placeholder="e.g., P026" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px;">
-                </div>
+        //     <form id="addProductForm" onsubmit="handleAddProductSubmit(event)" style="max-width: 500px; background: #f9fafb; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
+        //         <div style="margin-bottom: 15px;">
+        //             <label style="display:block; font-weight:bold; margin-bottom:5px; color:#374151;">Product ID:</label>
+        //             <input type="text" id="formProdId" placeholder="e.g., P026" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px;">
+        //         </div>
                 
-                <div style="margin-bottom: 15px;">
-                    <label style="display:block; font-weight:bold; margin-bottom:5px; color:#374151;">Product Name:</label>
-                    <input type="text" id="formProdName" placeholder="e.g., Mountain Spring Water" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px;">
-                </div>
+        //         <div style="margin-bottom: 15px;">
+        //             <label style="display:block; font-weight:bold; margin-bottom:5px; color:#374151;">Product Name:</label>
+        //             <input type="text" id="formProdName" placeholder="e.g., Mountain Spring Water" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px;">
+        //         </div>
                 
-                <div style="margin-bottom: 15px;">
-                    <label style="display:block; font-weight:bold; margin-bottom:5px; color:#374151;">Category Group:</label>
-                    <select id="formProdCategory" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px; background:white;">
-                        <option value="">-- Choose Category --</option>
-                        <option value="Canned Goods">Canned Goods</option>
-                        <option value="Clothing">Clothing</option>
-                        <option value="Kitchen Goods">Kitchen Goods</option>
-                        <option value="Non-Perishable Items">Non-Perishable Items</option>
-                    </select>
-                </div>
+        //         <div style="margin-bottom: 15px;">
+        //             <label style="display:block; font-weight:bold; margin-bottom:5px; color:#374151;">Category Group:</label>
+        //             <select id="formProdCategory" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px; background:white;">
+        //                 <option value="">-- Choose Category --</option>
+        //                 <option value="Canned Goods">Canned Goods</option>
+        //                 <option value="Clothing">Clothing</option>
+        //                 <option value="Kitchen Goods">Kitchen Goods</option>
+        //                 <option value="Non-Perishable Items">Non-Perishable Items</option>
+        //             </select>
+        //         </div>
                 
-                <div style="margin-bottom: 15px;">
-                    <label style="display:block; font-weight:bold; margin-bottom:5px; color:#374151;">Stock Quantity:</label>
-                    <input type="number" id="formProdQty" min="0" placeholder="0" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px;">
-                </div>
+        //         <div style="margin-bottom: 15px;">
+        //             <label style="display:block; font-weight:bold; margin-bottom:5px; color:#374151;">Stock Quantity:</label>
+        //             <input type="number" id="formProdQty" min="0" placeholder="0" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px;">
+        //         </div>
                 
-                <div style="margin-bottom: 20px;">
-                    <label style="display:block; font-weight:bold; margin-bottom:5px; color:#374151;">Unit Price (PHP ₱):</label>
-                    <input type="number" id="formProdPrice" step="0.01" min="0.01" placeholder="0.00" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px;">
-                </div>
+        //         <div style="margin-bottom: 20px;">
+        //             <label style="display:block; font-weight:bold; margin-bottom:5px; color:#374151;">Unit Price (PHP ₱):</label>
+        //             <input type="number" id="formProdPrice" step="0.01" min="0.01" placeholder="0.00" style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:4px;">
+        //         </div>
                 
-                <button type="submit" style="background:#2563eb; color:white; border:none; padding:10px 20px; font-weight:bold; border-radius:5px; cursor:pointer; width:100%;">
-                    💾 Validate & Save Asset
-                </button>
-            </form>`;
-            break;
+        //         <button type="submit" style="background:#2563eb; color:white; border:none; padding:10px 20px; font-weight:bold; border-radius:5px; cursor:pointer; width:100%;">
+        //             💾 Validate & Save Asset
+        //         </button>
+        //     </form>`;
+        //     break;
 
-        case "lowStock":
-            let lowStockRows = "";
-            productsDatabase.filter(p => p.quantity < 50).forEach(p => {
-                lowStockRows += `
-                <tr>
-                    <td>${p.id}</td>
-                    <td>${p.name}</td>
-                    <td>${p.category}</td>
-                    <td style="font-weight: bold; color: #ef4444;">${p.quantity}</td>
-                    <td>₱${p.price.toFixed(2)}</td>
-                </tr>`;
-            });
+        // case "lowStock":
+        //     let lowStockRows = "";
+        //     productsDatabase.filter(p => p.quantity < 50).forEach(p => {
+        //         lowStockRows += `
+        //         <tr>
+        //             <td>${p.id}</td>
+        //             <td>${p.name}</td>
+        //             <td>${p.category}</td>
+        //             <td style="font-weight: bold; color: #ef4444;">${p.quantity}</td>
+        //             <td>₱${p.price.toFixed(2)}</td>
+        //         </tr>`;
+        //     });
 
-            content.innerHTML = `
-            <h2>Low Stock Items Alert</h2>
-            <p style="color: #ef4444; font-weight: bold; margin-bottom: 15px;">Warning: The items listed below are critically below threshold reserves (Quantity < 50) and require re-orders.</p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Product ID</th>
-                        <th>Product Name</th>
-                        <th>Category</th>
-                        <th>Quantity</th>
-                        <th>Unit Price</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${lowStockRows.length > 0 ? lowStockRows : '<tr><td colspan="5" style="text-align:center; color:#10b981; padding: 20px; font-weight: bold;">Excellent: No products are currently running low on stock boundaries.</td></tr>'}
-                </tbody>
-            </table>`;
-            break;
+        //     content.innerHTML = `
+        //     <h2>Low Stock Items Alert</h2>
+        //     <p style="color: #ef4444; font-weight: bold; margin-bottom: 15px;">Warning: The items listed below are critically below threshold reserves (Quantity < 50) and require re-orders.</p>
+        //     <table>
+        //         <thead>
+        //             <tr>
+        //                 <th>Product ID</th>
+        //                 <th>Product Name</th>
+        //                 <th>Category</th>
+        //                 <th>Quantity</th>
+        //                 <th>Unit Price</th>
+        //             </tr>
+        //         </thead>
+        //         <tbody>
+        //             ${lowStockRows.length > 0 ? lowStockRows : '<tr><td colspan="5" style="text-align:center; color:#10b981; padding: 20px; font-weight: bold;">Excellent: No products are currently running low on stock boundaries.</td></tr>'}
+        //         </tbody>
+        //     </table>`;
+        //     break;
 
-        case "pendingOrders":
-            let pendingRows = "";
-            ordersDatabase.filter(o => o.status === "Pending").forEach(o => {
-                pendingRows += `
-                <tr>
-                    <td>${o.id}</td>
-                    <td>${o.productName}</td>
-                    <td>${o.qty}</td>
-                    <td>${o.orderDate}</td>
-                    <td>${o.deliveryDate}</td>
-                    <td><span style="background: #fef3c7; color: #d97706; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 12px;">${o.status}</span></td>
-                    <td style="text-align: center;">
-                        <button onclick="dispatchOrder('${o.id}')" style="background: #10b981; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 11px;">
-                            🚚 Ship Order
-                        </button>
-                    </td>
-                </tr>`;
-            });
+        // case "pendingOrders":
+        //     let pendingRows = "";
+        //     ordersDatabase.filter(o => o.status === "Pending").forEach(o => {
+        //         pendingRows += `
+        //         <tr>
+        //             <td>${o.id}</td>
+        //             <td>${o.productName}</td>
+        //             <td>${o.qty}</td>
+        //             <td>${o.orderDate}</td>
+        //             <td>${o.deliveryDate}</td>
+        //             <td><span style="background: #fef3c7; color: #d97706; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 12px;">${o.status}</span></td>
+        //             <td style="text-align: center;">
+        //                 <button onclick="dispatchOrder('${o.id}')" style="background: #10b981; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 11px;">
+        //                     🚚 Ship Order
+        //                 </button>
+        //             </td>
+        //         </tr>`;
+        //     });
 
-            content.innerHTML = `
-            <h2>Pending Orders Queue</h2>
-            <p style="margin-bottom: 15px;">Active processing queues awaiting fulfillment confirmation and line packaging.</p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Product Name</th>
-                        <th>Qty Ordered</th>
-                        <th>Order Date</th>
-                        <th>Expected Delivery</th>
-                        <th>Status</th>
-                        <th style="text-align: center; width: 110px;">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${pendingRows.length > 0 ? pendingRows : '<tr><td colspan="7" style="text-align:center; color:#999; padding: 20px;">No pending processing sequences inside queues.</td></tr>'}
-                </tbody>
-            </table>`;
-            break;
+        //     content.innerHTML = `
+        //     <h2>Pending Orders Queue</h2>
+        //     <p style="margin-bottom: 15px;">Active processing queues awaiting fulfillment confirmation and line packaging.</p>
+        //     <table>
+        //         <thead>
+        //             <tr>
+        //                 <th>Order ID</th>
+        //                 <th>Product Name</th>
+        //                 <th>Qty Ordered</th>
+        //                 <th>Order Date</th>
+        //                 <th>Expected Delivery</th>
+        //                 <th>Status</th>
+        //                 <th style="text-align: center; width: 110px;">Action</th>
+        //             </tr>
+        //         </thead>
+        //         <tbody>
+        //             ${pendingRows.length > 0 ? pendingRows : '<tr><td colspan="7" style="text-align:center; color:#999; padding: 20px;">No pending processing sequences inside queues.</td></tr>'}
+        //         </tbody>
+        //     </table>`;
+        //     break;
 
-        case "inTransitOrders":
-            let transitRows = "";
-            ordersDatabase.filter(o => o.status === "In Transit").forEach(o => {
-                transitRows += `
-                <tr>
-                    <td>${o.id}</td>
-                    <td>${o.productName}</td>
-                    <td>${o.qty}</td>
-                    <td>${o.orderDate}</td>
-                    <td>${o.deliveryDate}</td>
-                    <td><span style="background: #e0f2fe; color: #0369a1; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 12px;">${o.status}</span></td>
-                    <td style="text-align: center;">
-                        <button onclick="completeOrderDelivery('${o.id}')" style="background: #2563eb; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 11px;">
-                            ✅ Mark Delivered
-                        </button>
-                    </td>
-                </tr>`;
-            });
+        // case "inTransitOrders":
+        //     let transitRows = "";
+        //     ordersDatabase.filter(o => o.status === "In Transit").forEach(o => {
+        //         transitRows += `
+        //         <tr>
+        //             <td>${o.id}</td>
+        //             <td>${o.productName}</td>
+        //             <td>${o.qty}</td>
+        //             <td>${o.orderDate}</td>
+        //             <td>${o.deliveryDate}</td>
+        //             <td><span style="background: #e0f2fe; color: #0369a1; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 12px;">${o.status}</span></td>
+        //             <td style="text-align: center;">
+        //                 <button onclick="completeOrderDelivery('${o.id}')" style="background: #2563eb; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 11px;">
+        //                     ✅ Mark Delivered
+        //                 </button>
+        //             </td>
+        //         </tr>`;
+        //     });
 
-            content.innerHTML = `
-            <h2>In Transit Distribution Pipelines</h2>
-            <p style="margin-bottom: 15px;">Dispatched cargo load items currently mapped to courier tracking routes.</p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Product Name</th>
-                        <th>Qty Ordered</th>
-                        <th>Order Date</th>
-                        <th>Expected Delivery</th>
-                        <th>Status</th>
-                        <th style="text-align: center; width: 130px;">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${transitRows.length > 0 ? transitRows : '<tr><td colspan="7" style="text-align:center; color:#999; padding: 20px;">No freight shipments currently moving through en route channels.</td></tr>'}
-                </tbody>
-            </table>`;
-            break;
+        //     content.innerHTML = `
+        //     <h2>In Transit Distribution Pipelines</h2>
+        //     <p style="margin-bottom: 15px;">Dispatched cargo load items currently mapped to courier tracking routes.</p>
+        //     <table>
+        //         <thead>
+        //             <tr>
+        //                 <th>Order ID</th>
+        //                 <th>Product Name</th>
+        //                 <th>Qty Ordered</th>
+        //                 <th>Order Date</th>
+        //                 <th>Expected Delivery</th>
+        //                 <th>Status</th>
+        //                 <th style="text-align: center; width: 130px;">Action</th>
+        //             </tr>
+        //         </thead>
+        //         <tbody>
+        //             ${transitRows.length > 0 ? transitRows : '<tr><td colspan="7" style="text-align:center; color:#999; padding: 20px;">No freight shipments currently moving through en route channels.</td></tr>'}
+        //         </tbody>
+        //     </table>`;
+        //     break;
 
-        case "deliveredOrders":
-            let deliveredRows = "";
-            ordersDatabase.filter(o => o.status === "Delivered").forEach(o => {
-                deliveredRows += `
-                <tr>
-                    <td>${o.id}</td>
-                    <td>${o.productName}</td>
-                    <td>${o.qty}</td>
-                    <td>${o.orderDate}</td>
-                    <td>${o.deliveryDate}</td>
-                    <td><span style="background: #dcfce7; color: #15803d; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 12px;">${o.status}</span></td>
-                </tr>`;
-            });
+        // case "deliveredOrders":
+        //     let deliveredRows = "";
+        //     ordersDatabase.filter(o => o.status === "Delivered").forEach(o => {
+        //         deliveredRows += `
+        //         <tr>
+        //             <td>${o.id}</td>
+        //             <td>${o.productName}</td>
+        //             <td>${o.qty}</td>
+        //             <td>${o.orderDate}</td>
+        //             <td>${o.deliveryDate}</td>
+        //             <td><span style="background: #dcfce7; color: #15803d; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 12px;">${o.status}</span></td>
+        //         </tr>`;
+        //     });
 
-            content.innerHTML = `
-            <h2>Delivered Orders Archive</h2>
-            <p style="margin-bottom: 15px;">Completed historical distribution handoffs record logging sheet.</p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Product Name</th>
-                        <th>Qty Ordered</th>
-                        <th>Order Date</th>
-                        <th>Delivery Date</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${deliveredRows.length > 0 ? deliveredRows : '<tr><td colspan="6" style="text-align:center; color:#999; padding: 20px;">No archived historical drop sheets logged yet.</td></tr>'}
-                </tbody>
-            </table>`;
-            break;
+        //     content.innerHTML = `
+        //     <h2>Delivered Orders Archive</h2>
+        //     <p style="margin-bottom: 15px;">Completed historical distribution handoffs record logging sheet.</p>
+        //     <table>
+        //         <thead>
+        //             <tr>
+        //                 <th>Order ID</th>
+        //                 <th>Product Name</th>
+        //                 <th>Qty Ordered</th>
+        //                 <th>Order Date</th>
+        //                 <th>Delivery Date</th>
+        //                 <th>Status</th>
+        //             </tr>
+        //         </thead>
+        //         <tbody>
+        //             ${deliveredRows.length > 0 ? deliveredRows : '<tr><td colspan="6" style="text-align:center; color:#999; padding: 20px;">No archived historical drop sheets logged yet.</td></tr>'}
+        //         </tbody>
+        //     </table>`;
+        //     break;
 
         case "stockIn":
             let stockInRows = "";
