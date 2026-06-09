@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock History Audits</title>
+    <link rel="stylesheet" href="mystyle.css">
+</head>
+<body style="padding: 20px; background: transparent;">
+
+    <h2>Stock History Audits</h2>
+    <p style="margin-bottom: 15px;">Complete timeline index tracking system variations, fulfillment holds, and adjustments.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Audit ID</th>
+                <th>Date & Time</th>
+                <th>Product</th>
+                <th>Action</th>
+                <th>Qty Change</th>
+                <th>Previous Stock</th>
+                <th>New Stock</th>
+                <th>Reference</th>
+            </tr>
+        </thead>
+        <tbody id="stockHistoryTableBody">
+            </tbody>
+    </table>
+
+    <script src="script.js"></script>
+    <script>
+        // Run the dynamic engine immediately upon page presentation
+        if (typeof renderStockHistory === "function") {
+            renderStockHistory();
+        }
+    </script>
+</body>
+</html>

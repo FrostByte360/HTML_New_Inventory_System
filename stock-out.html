@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Out Records</title>
+    <link rel="stylesheet" href="mystyle.css">
+</head>
+<body style="padding: 20px; background: transparent;">
+
+    <h2>Stock Out Records</h2>
+    <p style="margin-bottom: 15px;">Verified inventory outbound log showing all completed customer and wholesale distribution updates.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Stock Out ID</th>
+                <th>Order ID</th>
+                <th>Product Name</th>
+                <th>Quantity Shipped</th>
+                <th>Delivery Date</th>
+                <th>Reason / Dispatch Notes</th>
+            </tr>
+        </thead>
+        <tbody id="stockOutTableBody">
+            </tbody>
+    </table>
+
+    <script src="script.js"></script>
+    <script>
+        // Trigger the rendering engine function immediately when the iframe loads this document
+        if (typeof renderStockOutRecords === "function") {
+            renderStockOutRecords();
+        }
+    </script>
+</body>
+</html>

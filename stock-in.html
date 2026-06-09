@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock In Records</title>
+    <link rel="stylesheet" href="mystyle.css">
+</head>
+<body style="padding: 20px; background: transparent;">
+
+    <h2>Stock In Records</h2>
+    <p style="margin-bottom: 15px;">Historical inventory tracking for incoming replenishments from suppliers.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Stock In ID</th>
+                <th>Date</th>
+                <th>Product ID</th>
+                <th>Product Name</th>
+                <th>Quantity Added</th>
+                <th>Supplier</th>
+            </tr>
+        </thead>
+        <tbody id="stockInTableBody">
+            </tbody>
+    </table>
+
+    <script src="script.js"></script>
+    <script>
+        // Fire up the rendering instantly when iframe calls the page file
+        if (typeof renderStockInRecords === "function") {
+            renderStockInRecords();
+        }
+    </script>
+</body>
+</html>

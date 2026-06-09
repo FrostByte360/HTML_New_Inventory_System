@@ -122,7 +122,7 @@ if (!localStorage.getItem("globalOrders")) {
 }
 
 // Master database holding exact Stock In Records
-let stockInDatabase = [
+const initialStockInMock = [
     { id: "SI001", date: "2026-06-01", prodId: "P001", prodName: "FreshWave Sardines", qty: 50, supplier: "Cebu Trading Co." },
     { id: "SI002", date: "2026-06-01", prodId: "P008", prodName: "BlueTrail Jeans", qty: 20, supplier: "Fashion Supply PH" },
     { id: "SI003", date: "2026-06-02", prodId: "P015", prodName: "ChefMaster Cooking Pot", qty: 10, supplier: "KitchenPro Supplies" },
@@ -130,6 +130,19 @@ let stockInDatabase = [
     { id: "SI005", date: "2026-06-04", prodId: "P023", prodName: "NutriPlus Milk Powder", qty: 25, supplier: "DairyMax Distributor" },
     { id: "SI006", date: "2026-06-05", prodId: "P012", prodName: "EasyFit Shorts", qty: 15, supplier: "UrbanWear Supplier" }
 ];
+
+// 2. Connect it to browser storage
+let stockInDatabase = JSON.parse(localStorage.getItem("globalStockIn")) || initialStockInMock;
+
+// 3. Persistence handler helper
+function saveStockInToStorage() {
+    localStorage.setItem("globalStockIn", JSON.stringify(stockInDatabase));
+}
+
+// 4. Initial commit if storage is empty
+if (!localStorage.getItem("globalStockIn")) {
+    saveStockInToStorage();
+}
 
 // Master database holding exact Stock Out Records (Delivered Only)
 const initialStockOutMock = [
@@ -158,7 +171,7 @@ if (!localStorage.getItem("globalStockOut")) saveStockOutToStorage();
 
 
 // Master database holding exact Transaction Log entries
-let transactionDatabase = [
+const initialTransactionMock = [
     { id: "TR001", type: "Stock In", ref: "SI001", prodId: "P001", qty: "+50", effect: "Increase" },
     { id: "TR002", type: "Stock In", ref: "SI002", prodId: "P008", qty: "+20", effect: "Increase" },
     { id: "TR003", type: "Stock In", ref: "SI003", prodId: "P015", qty: "+10", effect: "Increase" },
@@ -179,6 +192,19 @@ let transactionDatabase = [
     { id: "TR018", type: "Stock Out", ref: "ORD037", prodId: "P020", qty: "-50", effect: "Decrease" },
     { id: "TR019", type: "Stock Out", ref: "ORD038", prodId: "P025", qty: "-35", effect: "Decrease" }
 ];
+
+// 2. Connect it to browser storage
+let transactionDatabase = JSON.parse(localStorage.getItem("globalTransactions")) || initialTransactionMock;
+
+// 3. Persistence utility helper
+function saveTransactionsToStorage() {
+    localStorage.setItem("globalTransactions", JSON.stringify(transactionDatabase));
+}
+
+// 4. Initial commit if storage is empty
+if (!localStorage.getItem("globalTransactions")) {
+    saveTransactionsToStorage();
+}
 
 // Master database holding exact Delivery History Logs
 const initialHistoryMock = [
@@ -204,7 +230,7 @@ function saveDeliveryHistoryToStorage() {
 if (!localStorage.getItem("globalDeliveryHistory")) saveDeliveryHistoryToStorage();
 
 // Master tracking check ledger database containing live tracking logs
-let deliveryTrackingLogs = {
+const initialTrackingLogsMock = {
     "ORD011": [
         { time: "06/01/2026 08:15 AM", status: "Purchase order received" },
         { time: "06/01/2026 10:30 AM", status: "Inventory allocated" },
@@ -336,8 +362,21 @@ let deliveryTrackingLogs = {
     ]
 };
 
+// 2. Load from browser memory or default to the mock log collection
+let deliveryTrackingLogs = JSON.parse(localStorage.getItem("globalTrackingLogs")) || initialTrackingLogsMock;
+
+// 3. Simple persistence engine utility helper
+function saveTrackingLogsToStorage() {
+    localStorage.setItem("globalTrackingLogs", JSON.stringify(deliveryTrackingLogs));
+}
+
+// 4. Initial commit write if local cache is fresh
+if (!localStorage.getItem("globalTrackingLogs")) {
+    saveTrackingLogsToStorage();
+}
+
 // Master database holding newly requested Stock History items
-let stockHistoryDatabase = [
+const initialStockHistoryMock = [
     { auditId: "AUD001", dateTime: "05/27/2026 09:15 AM", product: "FreshWave Sardines", action: "Order Delivered", qtyChange: "-100", prevStock: 350, newStock: 250, reference: "ORD026" },
     { auditId: "AUD002", dateTime: "05/27/2026 09:30 AM", product: "Golden Harvest Beef", action: "Order Delivered", qtyChange: "-75", prevStock: 255, newStock: 180, reference: "ORD027" },
     { auditId: "AUD003", dateTime: "05/28/2026 10:20 AM", product: "Ocean Star Tuna", action: "Order Delivered", qtyChange: "-90", prevStock: 310, newStock: 220, reference: "ORD028" },
@@ -369,6 +408,19 @@ let stockHistoryDatabase = [
     { auditId: "AUD029", dateTime: "06/06/2026 01:30 PM", product: "FreshLock Container Set", action: "Stock Adjustment", qtyChange: "+15", prevStock: 40, newStock: 55, reference: "ADJ001" },
     { auditId: "AUD030", dateTime: "06/06/2026 02:15 PM", product: "ClearView Measuring Cup", action: "Stock Adjustment", qtyChange: "+10", prevStock: 20, newStock: 30, reference: "ADJ002" }
 ];
+
+// 2. Tie it to localStorage
+let stockHistoryDatabase = JSON.parse(localStorage.getItem("globalStockHistory")) || initialStockHistoryMock;
+
+// 3. Simple persistence utility helper
+function saveStockHistoryToStorage() {
+    localStorage.setItem("globalStockHistory", JSON.stringify(stockHistoryDatabase));
+}
+
+// 4. Run an initial write if storage is fresh
+if (!localStorage.getItem("globalStockHistory")) {
+    saveStockHistoryToStorage();
+}
 
 //======================================================================================================================================
 //======================================================================================================================================
@@ -441,7 +493,7 @@ function deleteProduct(productId, returnPage) {
     if (confirmRemoval) {
         productsDatabase = productsDatabase.filter(p => p.id !== productId);
         
-        // 🌟 ADD THIS HERE: Save the newly filtered array to localStorage!
+        // 🌟 ADDED: Save the newly filtered array to localStorage!
         saveToStorage(); 
         
         // REPLACED: Call our new iframe rendering engines instead of showPage
@@ -449,6 +501,14 @@ function deleteProduct(productId, returnPage) {
             renderProductList();
         } else if (returnPage === 'categories') {
             renderCategories();
+        } else if (returnPage === 'currentStock') {
+            // 🌟 ADDED: If they delete from the Current Stock/Stock In view, handle it here!
+            if (typeof renderCurrentStock === "function") {
+                renderCurrentStock();
+            } else {
+                // If you chose Option 1 (reusing the product-list file), fallback directly to product list render
+                renderProductList(); 
+            }
         } else {
             // Fallback just in case you haven't migrated other pages yet
             if (typeof showPage === "function") showPage(returnPage);
@@ -875,6 +935,190 @@ function renderDeliveredOrders() {
     tableBody.innerHTML = deliveredRows.length > 0 ? deliveredRows : '<tr><td colspan="6" style="text-align:center; color:#999; padding: 20px;">No archived historical drop sheets logged yet.</td></tr>';
 }
 
+function renderCurrentStock() {
+    const tableBody = document.getElementById("currentStockTableBody");
+    if (!tableBody) return;
+
+    let tableRows = "";
+    productsDatabase.forEach(p => {
+        tableRows += `
+        <tr>
+            <td>${p.id}</td>
+            <td>${p.name}</td>
+            <td>${p.category}</td>
+            <td style="font-weight: bold; color: ${p.quantity < 50 ? '#ef4444' : 'black'}">${p.quantity}</td>
+            <td>₱${p.price.toFixed(2)}</td>
+            <td style="text-align: center;">
+                <button onclick="deleteProduct('${p.id}', 'currentStock')" style="background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px;">
+                    🗑️ Delete
+                </button>
+            </td>
+        </tr>`;
+    });
+
+    tableBody.innerHTML = tableRows.length > 0 ? tableRows : '<tr><td colspan="6" style="text-align:center; color:#999; padding: 20px;">No inventory stock elements registered inside global matrix storage.</td></tr>';
+}
+
+function renderStockHistory() {
+    const tableBody = document.getElementById("stockHistoryTableBody");
+    if (!tableBody) return; // Safeguard block if user is on a different submenu sheet
+
+    let shRows = "";
+    
+    stockHistoryDatabase.forEach(sh => {
+        let badgeStyle = "background:#cbd5e1; color:#334155;";
+        if (sh.action === "Order Delivered") {
+            badgeStyle = "background:#dcfce7; color:#15803d;";
+        } else if (sh.action === "Inventory Reserved") {
+            badgeStyle = "background:#fef3c7; color:#d97706;";
+        } else if (sh.action === "Stock Adjustment") {
+            badgeStyle = "background:#e0f2fe; color:#0369a1;";
+        }
+
+        // Dynamically compute green color for items added (+) or red for item stock drop (-)
+        const changeColor = sh.qtyChange.startsWith("+") ? "#10b981" : "#ef4444";
+
+        shRows += `
+        <tr>
+            <td><strong>${sh.auditId}</strong></td>
+            <td style="white-space:nowrap; font-size:13px; color:#4b5563;">${sh.dateTime}</td>
+            <td>${sh.product}</td>
+            <td><span style="padding:3px 8px; border-radius:4px; font-weight:bold; font-size:11px; ${badgeStyle}">${sh.action}</span></td>
+            <td style="font-weight:bold; color:${changeColor};">${sh.qtyChange}</td>
+            <td>${sh.prevStock}</td>
+            <td style="font-weight:600;">${sh.newStock}</td>
+            <td><span style="font-family:monospace; background:#f3f4f6; padding:2px 6px; border-radius:4px; font-size:12px; color:#374151;">${sh.reference}</span></td>
+        </tr>`;
+    });
+
+    tableBody.innerHTML = shRows.length > 0 ? shRows : '<tr><td colspan="8" style="text-align:center; color:#999; padding:20px;">No historical system variations found inside active logging indices.</td></tr>';
+}
+
+function renderStockInRecords() {
+    const tableBody = document.getElementById("stockInTableBody");
+    if (!tableBody) return; // Safeguard guard clause if viewing a different page frame
+
+    let stockInRows = "";
+    
+    stockInDatabase.forEach(si => {
+        stockInRows += `
+        <tr>
+            <td>${si.id}</td>
+            <td>${si.date}</td>
+            <td>${si.prodId}</td>
+            <td>${si.prodName}</td>
+            <td style="font-weight:bold; color:#10b981;">+${si.qty}</td>
+            <td>${si.supplier}</td>
+        </tr>`;
+    });
+
+    tableBody.innerHTML = stockInRows.length > 0 ? stockInRows : '<tr><td colspan="6" style="text-align:center; color:#999; padding:20px;">No historical replenishment logs registered inside active registers.</td></tr>';
+}
+
+function renderStockOutRecords() {
+    const tableBody = document.getElementById("stockOutTableBody");
+    if (!tableBody) return; // Safeguard guard clause if viewing a different iframe view
+
+    let stockOutRows = "";
+    
+    stockOutDatabase.forEach(so => {
+        stockOutRows += `
+        <tr>
+            <td>${so.id}</td>
+            <td>${so.orderId}</td>
+            <td>${so.prodName}</td>
+            <td style="font-weight:bold; color:#f97316;">-${so.qty}</td>
+            <td>${so.delDate}</td>
+            <td><em style="color:#4b5563;">${so.reason}</em></td>
+        </tr>`;
+    });
+
+    tableBody.innerHTML = stockOutRows.length > 0 ? stockOutRows : '<tr><td colspan="6" style="text-align:center; color:#999; padding:20px;">No verified outbound logs registered inside active registers.</td></tr>';
+}
+
+function renderTransactionRecords() {
+    const tableBody = document.getElementById("transactionRecordsTableBody");
+    if (!tableBody) return; // Safeguard guard clause if viewing a different iframe view
+
+    let txRows = "";
+    
+    transactionDatabase.forEach(tx => {
+        const badgeColor = tx.effect === "Increase" ? "background:#dcfce7; color:#15803d;" : "background:#ffedd5; color:#ea580c;";
+        
+        txRows += `
+        <tr>
+            <td><strong>${tx.id}</strong></td>
+            <td><span style="padding:2px 6px; border-radius:4px; font-weight:bold; font-size:11px; ${badgeColor}">${tx.type}</span></td>
+            <td>${tx.ref}</td>
+            <td>${tx.prodId}</td>
+            <td style="font-weight:bold; color:${tx.effect === "Increase" ? "#15803d" : "#b45309"}">${tx.qty}</td>
+            <td><span style="font-weight:600; color:${tx.effect === "Increase" ? "#10b981" : "#ef4444"}">${tx.effect}</span></td>
+        </tr>`;
+    });
+
+    tableBody.innerHTML = txRows.length > 0 ? txRows : '<tr><td colspan="6" style="text-align:center; color:#999; padding:20px;">No master transactions registered inside system history log files.</td></tr>';
+}
+
+function renderDeliveryTracking() {
+    const container = document.getElementById("deliveryTrackingContainer");
+    if (!container) return; // Safeguard guard clause block if viewing a different page frame
+
+    let trackingSectionsHTML = `
+    <h2>Live Delivery Tracking Hub</h2>
+    <p style="margin-bottom: 25px;">Real-time checkpoint monitoring for freight packages currently in transit routes.</p>`;
+
+    let hasRecords = false;
+
+    for (let orderId in deliveryTrackingLogs) {
+        hasRecords = true;
+        const logs = deliveryTrackingLogs[orderId];
+        const activeOrder = ordersDatabase.find(o => o.id === orderId);
+        const itemName = activeOrder ? activeOrder.productName : "Unknown Item";
+        const volume = activeOrder ? activeOrder.qty : 0;
+
+        let timelineEventsHTML = "";
+        logs.forEach((log, index) => {
+            const isLatest = (index === logs.length - 1);
+            const pointStyle = isLatest 
+                ? "background:#2563eb; transform:scale(1.2); box-shadow:0 0 8px rgba(37,99,235,0.6);" 
+                : "background:#cbd5e1;";
+            
+            timelineEventsHTML += `
+            <div style="display:flex; margin-bottom:12px; position:relative; align-items:flex-start;">
+                <div style="width:160px; font-size:12px; color:#6b7280; font-weight:600; padding-top:2px;">
+                    🕒 ${log.time}
+                </div>
+                <div style="width:12px; height:12px; border-radius:50%; ${pointStyle} margin:6px 15px 0 15px; flex-shrink:0; z-index:2;"></div>
+                <div style="font-size:13px; color:${isLatest ? '#1e3a8a' : '#374151'}; font-weight:${isLatest ? 'bold' : 'normal'}; background:${isLatest ? '#eff6ff' : 'transparent'}; padding:${isLatest ? '4px 8px' : '0'}; border-radius:4px;">
+                    ${log.status}
+                </div>
+            </div>`;
+        });
+
+        trackingSectionsHTML += `
+        <div style="background:#ffffff; padding:18px; border-radius:8px; margin-bottom:25px; border:1px solid #e5e7eb; box-shadow:0 2px 5px rgba(0,0,0,0.03);">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #f3f4f6; padding-bottom:10px; margin-bottom:15px;">
+                <div>
+                    <span style="font-size:15px; font-weight:bold; color:#1f2937; background:#f3f4f6; padding:4px 10px; border-radius:6px; margin-right:10px;">📦 ${orderId}</span>
+                    <strong style="color:#4b5563;">${itemName}</strong>
+                </div>
+                <span style="font-size:12px; background:#e0f2fe; color:#0369a1; padding:4px 10px; border-radius:20px; font-weight:bold;">Volume: ${volume} units</span>
+            </div>
+            <div style="position:relative; padding-left:5px;">
+                <div style="position:absolute; left:180px; top:10px; bottom:15px; width:2px; background:#e5e7eb; z-index:1;"></div>
+                ${timelineEventsHTML}
+            </div>
+        </div>`;
+    }
+
+    // Fallback block display message if tracking queue is completely empty
+    if (!hasRecords) {
+        trackingSectionsHTML += `<div style="text-align:center; color:#999; padding: 40px; background:#fff; border-radius:8px; border:1px dashed #cbd5e1;">No packages currently mapped to tracking routes.</div>`;
+    }
+
+    container.innerHTML = trackingSectionsHTML;
+}
+
 //======================================================================================================================================
 //======================================================================================================================================
 //======================================================================================================================================
@@ -1191,73 +1435,73 @@ function showPage(page) {
         //     </table>`;
         //     break;
 
-        case "stockIn":
-            let stockInRows = "";
-            stockInDatabase.forEach(si => {
-                stockInRows += `
-                <tr>
-                    <td>${si.id}</td>
-                    <td>${si.date}</td>
-                    <td>${si.prodId}</td>
-                    <td>${si.prodName}</td>
-                    <td style="font-weight:bold; color:#10b981;">+${si.qty}</td>
-                    <td>${si.supplier}</td>
-                </tr>`;
-            });
+        // case "stockIn":
+        //     let stockInRows = "";
+        //     stockInDatabase.forEach(si => {
+        //         stockInRows += `
+        //         <tr>
+        //             <td>${si.id}</td>
+        //             <td>${si.date}</td>
+        //             <td>${si.prodId}</td>
+        //             <td>${si.prodName}</td>
+        //             <td style="font-weight:bold; color:#10b981;">+${si.qty}</td>
+        //             <td>${si.supplier}</td>
+        //         </tr>`;
+        //     });
 
-            content.innerHTML = `
-            <h2>Stock In Records</h2>
-            <p style="margin-bottom: 15px;">Historical inventory tracking for incoming replenishments from suppliers.</p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Stock In ID</th>
-                        <th>Date</th>
-                        <th>Product ID</th>
-                        <th>Product Name</th>
-                        <th>Quantity Added</th>
-                        <th>Supplier</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${stockInRows}
-                </tbody>
-            </table>`;
-            break;
+        //     content.innerHTML = `
+        //     <h2>Stock In Records</h2>
+        //     <p style="margin-bottom: 15px;">Historical inventory tracking for incoming replenishments from suppliers.</p>
+        //     <table>
+        //         <thead>
+        //             <tr>
+        //                 <th>Stock In ID</th>
+        //                 <th>Date</th>
+        //                 <th>Product ID</th>
+        //                 <th>Product Name</th>
+        //                 <th>Quantity Added</th>
+        //                 <th>Supplier</th>
+        //             </tr>
+        //         </thead>
+        //         <tbody>
+        //             ${stockInRows}
+        //         </tbody>
+        //     </table>`;
+        //     break;
 
-        case "stockOut":
-            let stockOutRows = "";
-            stockOutDatabase.forEach(so => {
-                stockOutRows += `
-                <tr>
-                    <td>${so.id}</td>
-                    <td>${so.orderId}</td>
-                    <td>${so.prodName}</td>
-                    <td style="font-weight:bold; color:#f97316;">-${so.qty}</td>
-                    <td>${so.delDate}</td>
-                    <td><em style="color:#4b5563;">${so.reason}</em></td>
-                </tr>`;
-            });
+        // case "stockOut":
+        //     let stockOutRows = "";
+        //     stockOutDatabase.forEach(so => {
+        //         stockOutRows += `
+        //         <tr>
+        //             <td>${so.id}</td>
+        //             <td>${so.orderId}</td>
+        //             <td>${so.prodName}</td>
+        //             <td style="font-weight:bold; color:#f97316;">-${so.qty}</td>
+        //             <td>${so.delDate}</td>
+        //             <td><em style="color:#4b5563;">${so.reason}</em></td>
+        //         </tr>`;
+        //     });
 
-            content.innerHTML = `
-            <h2>Stock Out Records</h2>
-            <p style="margin-bottom: 15px;">Verified inventory outbound log showing all completed customer and wholesale distribution updates.</p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Stock Out ID</th>
-                        <th>Order ID</th>
-                        <th>Product Name</th>
-                        <th>Quantity Shipped</th>
-                        <th>Delivery Date</th>
-                        <th>Reason / Dispatch Notes</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${stockOutRows}
-                </tbody>
-            </table>`;
-            break;
+        //     content.innerHTML = `
+        //     <h2>Stock Out Records</h2>
+        //     <p style="margin-bottom: 15px;">Verified inventory outbound log showing all completed customer and wholesale distribution updates.</p>
+        //     <table>
+        //         <thead>
+        //             <tr>
+        //                 <th>Stock Out ID</th>
+        //                 <th>Order ID</th>
+        //                 <th>Product Name</th>
+        //                 <th>Quantity Shipped</th>
+        //                 <th>Delivery Date</th>
+        //                 <th>Reason / Dispatch Notes</th>
+        //             </tr>
+        //         </thead>
+        //         <tbody>
+        //             ${stockOutRows}
+        //         </tbody>
+        //     </table>`;
+        //     break;
 
         case "transactionRecords":
             let txRows = "";
@@ -1382,54 +1626,54 @@ function showPage(page) {
             break;
 
         // DYNAMIC RENDERING FOR THE NEW STOCK HISTORY LOGS
-        case "stockHistory":
-            let shRows = "";
-            stockHistoryDatabase.forEach(sh => {
-                let badgeStyle = "background:#cbd5e1; color:#334155;";
-                if (sh.action === "Order Delivered") {
-                    badgeStyle = "background:#dcfce7; color:#15803d;";
-                } else if (sh.action === "Inventory Reserved") {
-                    badgeStyle = "background:#fef3c7; color:#d97706;";
-                } else if (sh.action === "Stock Adjustment") {
-                    badgeStyle = "background:#e0f2fe; color:#0369a1;";
-                }
+        // case "stockHistory":
+        //     let shRows = "";
+        //     stockHistoryDatabase.forEach(sh => {
+        //         let badgeStyle = "background:#cbd5e1; color:#334155;";
+        //         if (sh.action === "Order Delivered") {
+        //             badgeStyle = "background:#dcfce7; color:#15803d;";
+        //         } else if (sh.action === "Inventory Reserved") {
+        //             badgeStyle = "background:#fef3c7; color:#d97706;";
+        //         } else if (sh.action === "Stock Adjustment") {
+        //             badgeStyle = "background:#e0f2fe; color:#0369a1;";
+        //         }
 
-                const changeColor = sh.qtyChange.startsWith("+") ? "#10b981" : "#ef4444";
+        //         const changeColor = sh.qtyChange.startsWith("+") ? "#10b981" : "#ef4444";
 
-                shRows += `
-                <tr>
-                    <td><strong>${sh.auditId}</strong></td>
-                    <td style="white-space:nowrap; font-size:13px; color:#4b5563;">${sh.dateTime}</td>
-                    <td>${sh.product}</td>
-                    <td><span style="padding:3px 8px; border-radius:4px; font-weight:bold; font-size:11px; ${badgeStyle}">${sh.action}</span></td>
-                    <td style="font-weight:bold; color:${changeColor};">${sh.qtyChange}</td>
-                    <td>${sh.prevStock}</td>
-                    <td style="font-weight:600;">${sh.newStock}</td>
-                    <td><span style="font-family:monospace; background:#f3f4f6; padding:2px 6px; border-radius:4px; font-size:12px; color:#374151;">${sh.reference}</span></td>
-                </tr>`;
-            });
+        //         shRows += `
+        //         <tr>
+        //             <td><strong>${sh.auditId}</strong></td>
+        //             <td style="white-space:nowrap; font-size:13px; color:#4b5563;">${sh.dateTime}</td>
+        //             <td>${sh.product}</td>
+        //             <td><span style="padding:3px 8px; border-radius:4px; font-weight:bold; font-size:11px; ${badgeStyle}">${sh.action}</span></td>
+        //             <td style="font-weight:bold; color:${changeColor};">${sh.qtyChange}</td>
+        //             <td>${sh.prevStock}</td>
+        //             <td style="font-weight:600;">${sh.newStock}</td>
+        //             <td><span style="font-family:monospace; background:#f3f4f6; padding:2px 6px; border-radius:4px; font-size:12px; color:#374151;">${sh.reference}</span></td>
+        //         </tr>`;
+        //     });
 
-            content.innerHTML = `
-            <h2>Stock History Audits</h2>
-            <p style="margin-bottom: 15px;">Complete timeline index tracking system variations, fulfillment holds, and adjustments.</p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Audit ID</th>
-                        <th>Date & Time</th>
-                        <th>Product</th>
-                        <th>Action</th>
-                        <th>Qty Change</th>
-                        <th>Previous Stock</th>
-                        <th>New Stock</th>
-                        <th>Reference</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${shRows}
-                </tbody>
-            </table>`;
-            break;
+        //     content.innerHTML = `
+        //     <h2>Stock History Audits</h2>
+        //     <p style="margin-bottom: 15px;">Complete timeline index tracking system variations, fulfillment holds, and adjustments.</p>
+        //     <table>
+        //         <thead>
+        //             <tr>
+        //                 <th>Audit ID</th>
+        //                 <th>Date & Time</th>
+        //                 <th>Product</th>
+        //                 <th>Action</th>
+        //                 <th>Qty Change</th>
+        //                 <th>Previous Stock</th>
+        //                 <th>New Stock</th>
+        //                 <th>Reference</th>
+        //             </tr>
+        //         </thead>
+        //         <tbody>
+        //             ${shRows}
+        //         </tbody>
+        //     </table>`;
+        //     break;
 
         // DYNAMIC PROFILE MANAGEMENT PAGE BUILD
         case "profile":

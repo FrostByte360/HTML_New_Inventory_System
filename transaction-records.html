@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Transaction Ledger</title>
+    <link rel="stylesheet" href="mystyle.css">
+</head>
+<body style="padding: 20px; background: transparent;">
+
+    <h2>Master Transaction Ledger</h2>
+    <p style="margin-bottom: 15px;">Full real-time system audit log tracking structural movement effects across all global database assets.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Transaction ID</th>
+                <th>Type</th>
+                <th>Ref ID (Order / Stock In)</th>
+                <th>Product ID</th>
+                <th>Quantity Shift</th>
+                <th>Effect Boundary</th>
+            </tr>
+        </thead>
+        <tbody id="transactionRecordsTableBody">
+            </tbody>
+    </table>
+
+    <script src="script.js"></script>
+    <script>
+        // Fire up the rendering instantly when the iframe calls the page file
+        if (typeof renderTransactionRecords === "function") {
+            renderTransactionRecords();
+        }
+    </script>
+</body>
+</html>
