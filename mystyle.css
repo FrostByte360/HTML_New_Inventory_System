@@ -54,7 +54,7 @@ body {
 
 /* INVENTORY SYSTEM */
 #inventoryPage {
-    display: none;
+    display: block;
 }
 
 .sidebar {

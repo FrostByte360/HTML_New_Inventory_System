@@ -333,25 +333,27 @@ document.addEventListener("DOMContentLoaded", () => {
     showPage('dashboard');
 });
 
+//======================================================================================================================================
+
 function login() {
     let username = document.getElementById("username").value;
     let password = document.getElementById("password").value;
 
     if (username === adminProfile.username && password === adminProfile.password) {
-        document.getElementById("loginPage").style.display = "none";
-        document.getElementById("inventoryPage").style.display = "block";
-        showPage('dashboard');
+        window.location.replace("dashboard.html");
+        // Para di na sila makagamit back unless logout MWAHAHAHAHA >:3
     } else {
         alert("Invalid Username or Password!");
     }
 }
 
 function logout() {
-    document.getElementById("inventoryPage").style.display = "none";
-    document.getElementById("loginPage").style.display = "flex";
+    window.location.replace("login.html");
     document.getElementById("username").value = "";
     document.getElementById("password").value = "";
 }
+
+//======================================================================================================================================
 
 function toggleSidebar() {
     document.getElementById("sidebar").classList.toggle("collapsed");
