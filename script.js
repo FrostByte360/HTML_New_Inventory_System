@@ -378,9 +378,32 @@ function deleteProduct(productId, returnPage) {
     const confirmRemoval = confirm(`Are you sure you want to completely remove "${targetProduct.name}" (${targetProduct.id}) from the system?`);
     if (confirmRemoval) {
         productsDatabase = productsDatabase.filter(p => p.id !== productId);
-        showPage(returnPage);
+        
+        // REPLACED: Call our new iframe rendering engines instead of showPage
+        if (returnPage === 'productList') {
+            renderProductList();
+        } else if (returnPage === 'categories') {
+            renderCategories();
+        } else {
+            // Fallback just in case you haven't migrated other pages yet
+            if (typeof showPage === "function") showPage(returnPage);
+        }
     }
 }
+
+// function deleteProduct(productId, returnPage) {
+//     const targetProduct = productsDatabase.find(p => p.id === productId);
+//     if (!targetProduct) {
+//         alert("Error: Target item could not be resolved.");
+//         return;
+//     }
+
+//     const confirmRemoval = confirm(`Are you sure you want to completely remove "${targetProduct.name}" (${targetProduct.id}) from the system?`);
+//     if (confirmRemoval) {
+//         productsDatabase = productsDatabase.filter(p => p.id !== productId);
+//         showPage(returnPage);
+//     }
+// }
 
 function dispatchOrder(orderId) {
     const matchedOrder = ordersDatabase.find(o => o.id === orderId);
@@ -532,6 +555,99 @@ function clearPasswordForm() {
     }
 }
 
+//======================================================================================================================================
+//======================================================================================================================================
+//======================================================================================================================================
+
+// Extract this out so the iframe can call it directly!
+function renderProductList() {
+    // 1. Try to find the table body inside the iframe page
+    const tableBody = document.getElementById("productTableBody");
+    if (!tableBody) return; // Exit if we aren't on the productList page
+
+    let tableRows = "";
+    
+    // The exact same loop they wrote!
+    productsDatabase.forEach(p => {
+        tableRows += `
+        <tr>
+            <td>${p.id}</td>
+            <td>${p.name}</td>
+            <td>${p.category}</td>
+            <td style="font-weight: bold; color: ${p.quantity < 50 ? '#ef4444' : 'black'}">${p.quantity}</td>
+            <td>₱${p.price.toFixed(2)}</td>
+            <td style="text-align: center;">
+                <button onclick="deleteProduct('${p.id}', 'productList')" style="background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px;">
+                    🗑️ Delete
+                </button>
+            </td>
+        </tr>`;
+    });
+
+    // 2. Inject the rows into our new target ID
+    tableBody.innerHTML = tableRows.length > 0 ? tableRows : '<tr><td colspan="6" style="text-align:center; color:#999; padding: 20px;">No inventory stock elements registered inside global matrix storage.</td></tr>';
+}
+
+function renderCategories() {
+    // 1. Try to find the target container inside your new categories.html page
+    const container = document.getElementById("categoriesContainer");
+    if (!container) return; // Safeguard if we aren't currently viewing categories
+
+    const categoriesList = ["Canned Goods", "Clothing", "Kitchen Goods", "Non-Perishable Items"];
+    let categoriesHTML = `<h2>Product Categories</h2><p style="margin-bottom: 25px;">Browse inventory products grouped by operational category segments.</p>`;
+
+    categoriesList.forEach(catName => {
+        const filteredProducts = productsDatabase.filter(p => p.category === catName);
+        let catRows = "";
+        let catTotalValue = 0;
+
+        filteredProducts.forEach(p => {
+            catTotalValue += (p.quantity * p.price);
+            catRows += `
+            <tr>
+                <td>${p.id}</td>
+                <td>${p.name}</td>
+                <td style="font-weight: bold; color: ${p.quantity < 50 ? '#ef4444' : 'black'}">${p.quantity}</td>
+                <td>₱${p.price.toFixed(2)}</td>
+                <td style="text-align: center;">
+                    <button onclick="deleteProduct('${p.id}', 'categories')" style="background: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 11px;">
+                        🗑️ Delete
+                    </button>
+                </td>
+            </tr>`;
+        });
+
+        categoriesHTML += `
+        <div style="margin-bottom: 35px; background: #fdfdfd; padding: 15px; border-radius: 8px; border-left: 5px solid #2563eb; box-shadow: 0 1px 4px rgba(0,0,0,0.05);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h3 style="color: #1f2937;">📂 ${catName} (${filteredProducts.length} Items)</h3>
+                <span style="font-size: 14px; background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 12px; font-weight: bold;">Valuation: ₱${catTotalValue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="background: #4b5563;">Product ID</th>
+                        <th style="background: #4b5563;">Product Name</th>
+                        <th style="background: #4b5563;">Quantity</th>
+                        <th style="background: #4b5563;">Unit Price</th>
+                        <th style="background: #4b5563; width: 90px; text-align: center;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${catRows.length > 0 ? catRows : '<tr><td colspan="5" style="text-align:center; color:#999; padding:15px;">No products found in this category.</td></tr>'}
+                </tbody>
+            </table>
+        </div>`;
+    });
+
+    // 2. Inject everything directly into the categories file container
+    container.innerHTML = categoriesHTML;
+}
+
+//======================================================================================================================================
+//======================================================================================================================================
+//======================================================================================================================================
+
 function showPage(page) {
     let content = document.getElementById("pageContent");
 
@@ -565,95 +681,95 @@ function showPage(page) {
             </div>`;
             break;
 
-        case "productList":
-        case "currentStock":
-            let tableRows = "";
-            productsDatabase.forEach(p => {
-                tableRows += `
-                <tr>
-                    <td>${p.id}</td>
-                    <td>${p.name}</td>
-                    <td>${p.category}</td>
-                    <td style="font-weight: bold; color: ${p.quantity < 50 ? '#ef4444' : 'black'}">${p.quantity}</td>
-                    <td>₱${p.price.toFixed(2)}</td>
-                    <td style="text-align: center;">
-                        <button onclick="deleteProduct('${p.id}', '${page}')" style="background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px;">
-                            🗑️ Delete
-                        </button>
-                    </td>
-                </tr>`;
-            });
+        // case "productList":
+        // case "currentStock":
+        //     let tableRows = "";
+        //     productsDatabase.forEach(p => {
+        //         tableRows += `
+        //         <tr>
+        //             <td>${p.id}</td>
+        //             <td>${p.name}</td>
+        //             <td>${p.category}</td>
+        //             <td style="font-weight: bold; color: ${p.quantity < 50 ? '#ef4444' : 'black'}">${p.quantity}</td>
+        //             <td>₱${p.price.toFixed(2)}</td>
+        //             <td style="text-align: center;">
+        //                 <button onclick="deleteProduct('${p.id}', '${page}')" style="background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px;">
+        //                     🗑️ Delete
+        //                 </button>
+        //             </td>
+        //         </tr>`;
+        //     });
 
-            content.innerHTML = `
-            <h2>Product Catalog List</h2>
-            <p style="margin-bottom: 15px;">A live directory view highlighting all item variants inside active reserves.</p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Product ID</th>
-                        <th>Product Name</th>
-                        <th>Category</th>
-                        <th>Quantity</th>
-                        <th>Unit Price</th>
-                        <th style="width: 100px; text-align: center;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${tableRows.length > 0 ? tableRows : '<tr><td colspan="6" style="text-align:center; color:#999; padding: 20px;">No inventory stock elements registered inside global matrix storage.</td></tr>'}
-                </tbody>
-            </table>`;
-            break;
+        //     content.innerHTML = `
+        //     <h2>Product Catalog List</h2>
+        //     <p style="margin-bottom: 15px;">A live directory view highlighting all item variants inside active reserves.</p>
+        //     <table>
+        //         <thead>
+        //             <tr>
+        //                 <th>Product ID</th>
+        //                 <th>Product Name</th>
+        //                 <th>Category</th>
+        //                 <th>Quantity</th>
+        //                 <th>Unit Price</th>
+        //                 <th style="width: 100px; text-align: center;">Actions</th>
+        //             </tr>
+        //         </thead>
+        //         <tbody>
+        //             ${tableRows.length > 0 ? tableRows : '<tr><td colspan="6" style="text-align:center; color:#999; padding: 20px;">No inventory stock elements registered inside global matrix storage.</td></tr>'}
+        //         </tbody>
+        //     </table>`;
+        //     break;
 
-        case "categories":
-            const categoriesList = ["Canned Goods", "Clothing", "Kitchen Goods", "Non-Perishable Items"];
-            let categoriesHTML = `<h2>Product Categories</h2><p style="margin-bottom: 25px;">Browse inventory products grouped by operational category segments.</p>`;
+        // case "categories":
+        //     const categoriesList = ["Canned Goods", "Clothing", "Kitchen Goods", "Non-Perishable Items"];
+        //     let categoriesHTML = `<h2>Product Categories</h2><p style="margin-bottom: 25px;">Browse inventory products grouped by operational category segments.</p>`;
 
-            categoriesList.forEach(catName => {
-                const filteredProducts = productsDatabase.filter(p => p.category === catName);
-                let catRows = "";
-                let catTotalValue = 0;
+        //     categoriesList.forEach(catName => {
+        //         const filteredProducts = productsDatabase.filter(p => p.category === catName);
+        //         let catRows = "";
+        //         let catTotalValue = 0;
 
-                filteredProducts.forEach(p => {
-                    catTotalValue += (p.quantity * p.price);
-                    catRows += `
-                    <tr>
-                        <td>${p.id}</td>
-                        <td>${p.name}</td>
-                        <td style="font-weight: bold; color: ${p.quantity < 50 ? '#ef4444' : 'black'}">${p.quantity}</td>
-                        <td>₱${p.price.toFixed(2)}</td>
-                        <td style="text-align: center;">
-                            <button onclick="deleteProduct('${p.id}', 'categories')" style="background: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 11px;">
-                                🗑️ Delete
-                            </button>
-                        </td>
-                    </tr>`;
-                });
+        //         filteredProducts.forEach(p => {
+        //             catTotalValue += (p.quantity * p.price);
+        //             catRows += `
+        //             <tr>
+        //                 <td>${p.id}</td>
+        //                 <td>${p.name}</td>
+        //                 <td style="font-weight: bold; color: ${p.quantity < 50 ? '#ef4444' : 'black'}">${p.quantity}</td>
+        //                 <td>₱${p.price.toFixed(2)}</td>
+        //                 <td style="text-align: center;">
+        //                     <button onclick="deleteProduct('${p.id}', 'categories')" style="background: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 11px;">
+        //                         🗑️ Delete
+        //                     </button>
+        //                 </td>
+        //             </tr>`;
+        //         });
 
-                categoriesHTML += `
-                <div style="margin-bottom: 35px; background: #fdfdfd; padding: 15px; border-radius: 8px; border-left: 5px solid #2563eb; box-shadow: 0 1px 4px rgba(0,0,0,0.05);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <h3 style="color: #1f2937;">📂 ${catName} (${filteredProducts.length} Items)</h3>
-                        <span style="font-size: 14px; background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 12px; font-weight: bold;">Valuation: ₱${catTotalValue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th style="background: #4b5563;">Product ID</th>
-                                <th style="background: #4b5563;">Product Name</th>
-                                <th style="background: #4b5563;">Quantity</th>
-                                <th style="background: #4b5563;">Unit Price</th>
-                                <th style="background: #4b5563; width: 90px; text-align: center;">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${catRows.length > 0 ? catRows : '<tr><td colspan="5" style="text-align:center; color:#999; padding:15px;">No products found in this category.</td></tr>'}
-                        </tbody>
-                    </table>
-                </div>`;
-            });
+        //         categoriesHTML += `
+        //         <div style="margin-bottom: 35px; background: #fdfdfd; padding: 15px; border-radius: 8px; border-left: 5px solid #2563eb; box-shadow: 0 1px 4px rgba(0,0,0,0.05);">
+        //             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        //                 <h3 style="color: #1f2937;">📂 ${catName} (${filteredProducts.length} Items)</h3>
+        //                 <span style="font-size: 14px; background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 12px; font-weight: bold;">Valuation: ₱${catTotalValue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+        //             </div>
+        //             <table>
+        //                 <thead>
+        //                     <tr>
+        //                         <th style="background: #4b5563;">Product ID</th>
+        //                         <th style="background: #4b5563;">Product Name</th>
+        //                         <th style="background: #4b5563;">Quantity</th>
+        //                         <th style="background: #4b5563;">Unit Price</th>
+        //                         <th style="background: #4b5563; width: 90px; text-align: center;">Action</th>
+        //                     </tr>
+        //                 </thead>
+        //                 <tbody>
+        //                     ${catRows.length > 0 ? catRows : '<tr><td colspan="5" style="text-align:center; color:#999; padding:15px;">No products found in this category.</td></tr>'}
+        //                 </tbody>
+        //             </table>
+        //         </div>`;
+        //     });
 
-            content.innerHTML = categoriesHTML;
-            break;
+        //     content.innerHTML = categoriesHTML;
+        //     break;
 
         case "addProduct":
             content.innerHTML = `
