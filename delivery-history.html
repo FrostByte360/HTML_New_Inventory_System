@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery History Archive</title>
+    <link rel="stylesheet" href="mystyle.css">
+</head>
+<body style="padding: 20px; background: transparent;">
+
+    <h2>Delivery History Archive</h2>
+    <p style="margin-bottom: 15px;">End-to-end trip logistics records verifying execution drop dates and route milestones.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Tracking ID</th>
+                <th>Order ID</th>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Order Date</th>
+                <th>Delivery Date</th>
+                <th>Status</th>
+                <th>Remarks</th>
+            </tr>
+        </thead>
+        <tbody id="deliveryHistoryTableBody">
+            </tbody>
+    </table>
+
+    <script src="script.js"></script>
+    <script>
+        // Fire up the rendering instantly when the iframe calls the page file
+        if (typeof renderDeliveryHistory === "function") {
+            renderDeliveryHistory();
+        }
+    </script>
+</body>
+</html>

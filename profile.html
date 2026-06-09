@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Profile Page</title>
+    <link rel="stylesheet" href="mystyle.css">
+</head>
+<body style="padding: 20px; background: transparent;">
+
+    <div id="profileViewContainer">
+        </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Trigger execution instantly when the iframe calls the page file
+        if (typeof renderProfile === "function") {
+            renderProfile();
+        }
+    </script>
+</body>
+</html>
