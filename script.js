@@ -970,7 +970,15 @@ function renderDeliveryTracking() {
 
     let trackingSectionsHTML = `
     <h2>Live Delivery Tracking Hub</h2>
-    <p style="margin-bottom: 25px;">Real-time checkpoint monitoring for freight packages currently in transit routes.</p>`;
+    <p style="margin-bottom: 25px;">Real-time checkpoint monitoring for freight packages currently in transit routes.</p>
+    
+    <div style="margin-bottom: 35px;">
+        <div style="width: 100%; overflow: hidden; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            <img src="img/imgtracking.png" alt="National Shipment Tracking Dashboard Map" style="width: 100%; height: auto; display: block;">
+        </div>
+    </div>
+    
+    <h3 style="margin-bottom: 15px; color: #374151;">Active Route Checkpoint Timelines</h3>`;
 
     let hasRecords = false;
 
