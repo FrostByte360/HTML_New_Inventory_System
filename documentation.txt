@@ -1,0 +1,96 @@
+INTRODUCTION
+===========================================================================================================================================
+    The Inventory System Webpage utilizes a single-page application (SPA) layout using iframe-based component architecture.
+Instead of making the browser completely refresh and reload a brand new page everytime an option/menu/submenu is clicked, the
+layout keeps the main page (dashboard) page open permanently and simply swaps the internal content windows dynamically.
+
+3 MAIN SPA LAYOUT COMPONENTS
+dashboard.html
+    Acts as the main base template of the sidebar menu options. The page never loads a new page tab/window
+    when the user navigates through the menus.
+
+<iframe id="mainDisplay">
+    The window viewport container tag in the center of the main page. It acts as a blank viewing canvas for when the code of each
+    menu is interacted.
+
+Pages (e.g. profile.html, productlist.html)
+    These are the isolated page sheets that only contain the specific HTML layout for each option/menu/submenu buttons,
+
+    Instead of the script engine manually deleting and writing HTML code strings into a <div> tag container via a switch(case) statement,
+the setup manipulates the source (src) property attribute of the <iframe> tag.
+    For example, when a user clicks "Change Password" on the sidebar of the main dashboard.html file, using src, the browser catches the
+file's instruction link and draws the security form sheet directly inside the <iframe> window.
+    Because of the shared script functions linked to both the main template file and the interactable pages, all variables across each
+of them are safely accessible from a unified source without any breaks.
+
+TABLES
+===========================================================================================================================================
+A table in JS is represented as an Array ( [ ] ), and each row inside the table is an object ( { } ).
+The webpage defined five specific variables for every single product row to ensure consistency across the program.
+
+id (Primary Key)
+    "P001", "P002", etc. were used in the design. This is a unique key identifier.
+
+name (String Attribute)
+    The descriptive text/title of the product.
+
+category (Grouping Vector)
+    Each product item is categorized in specific divisions such as "Canned Goods", "Non-Perishable Items", etc.
+
+quantity (Numerical State)
+    The exact amount of units left in the inventory system.
+
+price (Floating Point Numerical State)
+    The monetary value assigned to a single unit of item.
+
+TABLE VALUE GET AND SET
+===========================================================================================================================================
+Array Looping (Iteration) and Array Searching (Cross-Referencing).
+
+Before any rendering function can touch a single piece of data, it has to fetch the master string array database from the browser's
+memory disk using getItem() and instantly parse it back into a live variable array list.
+
+const productsList = JSON.parse(localStorage.getItem("globalProducts")) || [];
+
+Kung wala sini sa pinaka-babaw sang function block, mablanko ang page kay wala siya sing data list
+nga pagahugutan sang mga values!
+
+
+
+Inside the dashboard, the page computes specific data metrics. The function uses built-in JavaScript array operations to filter
+and extract properties from the elements:
+
+Property Counting (.length):
+
+const totalProducts = productsList.length;
+
+This simply counts the total number of object rows present inside your array table folder.
+
+Conditional Property Filtering (.filter()):
+
+JavaScript
+const lowStockCount = productsList.filter(p => Number(p.quantity) <= 45).length;
+This instructs the engine to loop through every single product object row (p).
+It extracts the value attached to the .quantity property key parameter, checks if it's less than or equal to 45, and counts
+how many matching rows pass the test!
+
+
+
+This is the most advanced section because it uses Cross-Referencing Map Lookup Operations. Your loop circles through
+the shipping records, but it needs to call up item descriptions sitting in a completely different table list (ordersDatabase).
+
+Target Row Matching (.find()):
+
+const activeOrder = ordersDatabase.find(o => o.id === orderId);
+The system takes the orderId from your tracking log and searches through the ordersDatabase table
+line-by-line until it finds a row where the row identifier (o.id) matches perfectly.
+
+String Property Injection (${...} Template Literals):
+Once that specific row object is safely captured inside the activeOrder bucket, the function calls the properties
+directly inside the HTML layout string blocks using the dollar-sign curly-brace syntax:
+
+const itemName = activeOrder ? activeOrder.productName : "Unknown Item";
+// Then injected directly into the HTML structure:
+`<strong>${itemName}</strong>`
+
+This extracts the raw text data string value (like "BlueTrail Jeans") and welds it directly into your visual template on the fly!

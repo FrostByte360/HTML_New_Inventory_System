@@ -1,4 +1,5 @@
 // BEGINNING OF SCRIPT.JS
+// Basta dire lang ang sugod!
 
 const initialMockData = [
     { id: "P001", name: "FreshWave Sardines", category: "Canned Goods", quantity: 250, price: 28.00 },
@@ -427,6 +428,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Pangitaon niya ang main iframe sa sulod sang dashboard.html and set its default source to overview.html
     // An <iframe> (Inline Frame) embeds another HTML page inside the current document, creating a nested browsing context.
     // It’s widely used for embedding videos, maps, widgets, or even entire web pages.
+    // Basta amo na ah
     const mainIframe = document.getElementById("main-display"); 
     if (mainIframe) {
         mainIframe.src = "overview.html";
@@ -1214,7 +1216,7 @@ function renderDashboardOverview() {
     const aggregateOrdersCount = ordersList.length;
 
     // 3. Calculate Low Stock Items (Example boundary parameter: Stock count is 10 or below)
-    const lowStockCount = productsList.filter(p => Number(p.stock) <= 10).length;
+    const lowStockCount = productsList.filter(p => Number(p.quantity) <= 45).length;
 
     // 4. Calculate Pending Deliveries (Count order entries whose active status is not 'Delivered')
     const pendingDeliveriesCount = ordersList.filter(o => o.status !== "Delivered").length;
