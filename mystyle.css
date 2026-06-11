@@ -6,27 +6,58 @@
 }
 
 body {
-    background: #f4f6f9;
+    background: #fdfbed;
 }
 
 /* LOGIN PAGE */
 #loginPage {
-    width: 100%;
+       width: 100%;
     height: 100vh;
     display: flex;
+    flex-direction: column; /* Stacks title on top of box */
     justify-content: center;
     align-items: center;
-    background: white;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('bg1.png');
+    background-size: cover;
+    overflow: hidden; /* Prevents any accidental scrolling */
 }
 
+/* Style for the "Velocity Inventory" text */
+.animate-title {
+    color: white;
+    /* Reduced font size slightly so it takes up less vertical space */
+    font-size: 3.5rem; 
+    font-weight: 900;
+    margin-bottom: 50px; /* Reduced gap between title and box */
+    text-shadow: 2px 4px 10px rgba(0, 0, 0, 0.3);
+    
+    opacity: 0;
+    animation: fadeInUp 1s ease-out forwards;
+}
+
+/* The animation remains the same */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Adjusting the login container to be slightly more compact if needed */
 .login-container {
-    width: 380px;
-    padding: 25px;
+    width: 360px; /* Slightly narrowed */
+    padding: 20px; /* Slightly less padding */
     border: 1px solid #999;
     border-radius: 15px;
-    background: rgb(102, 96, 96);
+    background: rgb(253, 251, 237, 0.3);
     color: white;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
+
 
 .login-container h1 {
     margin-bottom: 20px;
@@ -47,7 +78,8 @@ body {
 .login-container button {
     margin-top: 20px;
     float: right;
-    padding: 10px 15px;
+    background: rgb(255, 255, 255, 0.7);
+    padding: 10px 20px;
     cursor: pointer;
     border-radius: 10px;
 }
@@ -58,27 +90,45 @@ body {
 }
 
 .sidebar {
-    width: 260px;
+    width: 250px;
     height: 100vh;
-    background: #1f2937;
+    background: #06302E;
     color: white;
     position: fixed;
     left: 0;
     top: 0;
-    overflow-y: auto;
-    transition: .3s;
+    overflow: hidden;
+    transition: all .3s ease;
+    border-right: 1px solid #374151;
+     white-space: nowrap;
 }
 
 .sidebar.collapsed {
     width: 70px;
 }
 
+.sidebar.collapsed .menu-item span:not(first-child), 
+.sidebar.collapsed .logo span,
+.sidebar.collapsed .menu-btn span:not(first-child) {
+    display: none;
+}
+
+.sidebar.collapsed .menu-btn, 
+.sidebar.collapsed .menu-item a {
+    justify-content: center;
+    padding: 10px;
+}
+
+.sidebar.collapsed .menu-item a span:first-child,
+.sidebar.collapsed .menu-btn span:first-child {
+    display: inline-block;
+}
+
 .logo {
-    text-align: center;
-    padding: 20px;
-    font-size: 22px;
-    font-weight: bold;
+text-align: center;
+    padding: 15px 10px;
     border-bottom: 1px solid #374151;
+    margin-bottom: 10px;
 }
 
 .toggle-btn {
@@ -91,6 +141,9 @@ body {
 
 .menu {
     padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Space between buttons */
 }
 
 .menu-item {
@@ -99,17 +152,24 @@ body {
 
 .menu-btn {
     width: 100%;
-    padding: 12px;
+    padding: 12px 15px;
     border: none;
-    background: #374151;
+    background: #37514F;
     color: white;
     text-align: left;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 8px;
+
+    display: flex;
+    align-items: center; 
+    gap: 12px; /* Space between icon and text */
+    
+    font-size: 14px; /* Slightly smaller font to fit better */
+    transition: background 0.2s;
 }
 
 .menu-btn:hover {
-    background: #4b5563;
+    background: #456865;
 }
 
 .submenu {
@@ -123,7 +183,7 @@ body {
     text-decoration: none;
     color: white;
     padding: 10px;
-    background: #4b5563;
+    background: #324947;
     margin-bottom: 3px;
     border-radius: 5px;
 }
@@ -164,3 +224,4 @@ table th {
     background: #2563eb;
     color: white;
 }
+ 
