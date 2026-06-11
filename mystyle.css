@@ -35,6 +35,19 @@ body {
     animation: fadeInUp 1s ease-out forwards;
 }
 
+h3 {
+    color: white;
+    /* Reduced font size slightly so it takes up less vertical space */
+    font-size: 32px; 
+    font-weight: 900;
+    margin-bottom: 50px; /* Reduced gap between title and box */
+    text-shadow: 2px 4px 10px rgba(0, 0, 0, 0.3);
+    
+    opacity: 0;
+    animation: fadeInUp 1s ease-out forwards;
+}
+
+
 /* The animation remains the same */
 @keyframes fadeInUp {
     0% {
